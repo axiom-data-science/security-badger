@@ -36,3 +36,67 @@ To build the docker image:
 To run the image as a docker container
 
     docker run -it --rm security-badger
+
+
+Usage
+-----
+
+```
+Usage: security-badger [OPTIONS] <AUDIT_JSON>
+
+Arguments:
+  <AUDIT_JSON>  Path to the audit report as JSON
+
+Options:
+  -v, --verbose
+          Increase verbosity
+      --filter <FILTER>
+          Ignore vulnerabilities with this status [possible values: unknown, not-affected, affected, fixed, under-investigation, will-not-fix, fix-deferred, end-of-life]
+      --report-severity <REPORT_SEVERITY>
+          Log vulnerabilities with at least this severity [possible values: unknown, low, medium, high, critical]
+      --svg <SVG>
+          Output an SVG Badge
+  -h, --help
+          Print help
+  -V, --version
+          Print version
+```
+
+Examples
+--------
+
+To log a brief summary of critical vulnerabilities:
+
+```
+$ security-badger --report-severity critical tests/data/sample-audit.json
+2025-03-20T14:34:28.219Z INFO  [security_badger] Low Severity Vulnerabilities = 76
+2025-03-20T14:34:28.219Z INFO  [security_badger] Medium Severity Vulnerabilities = 27
+2025-03-20T14:34:28.219Z INFO  [security_badger] High Severity Vulnerabilities = 3
+2025-03-20T14:34:28.219Z INFO  [security_badger] Critical Severity Vulnerabilities = 2
+2025-03-20T14:34:28.219Z INFO  [security_badger] (C!) {will_not_fix} CVE-2019-8457 sqlite: heap out-of-bound read in function rtreenode()
+2025-03-20T14:34:28.219Z INFO  [security_badger] (C!) {will_not_fix} CVE-2023-45853 zlib: integer overflow and resultant heap-based buffer overflow in zipOpenNewFileInZip4_6
+```
+
+
+To generate an SVG badge:
+```
+$ security-badger --svg vulns.svg tests/data/sample-audit.json
+2025-03-20T14:34:28.219Z INFO  [security_badger] Low Severity Vulnerabilities = 76
+2025-03-20T14:34:28.219Z INFO  [security_badger] Medium Severity Vulnerabilities = 27
+2025-03-20T14:34:28.219Z INFO  [security_badger] High Severity Vulnerabilities = 3
+2025-03-20T14:34:28.219Z INFO  [security_badger] Critical Severity Vulnerabilities = 2
+```
+
+![vulnerable.svg](examples/vulnerable.svg)
+
+To generate a badge but filter vulnerabiltiies marked as `wont_fix` or `not_affected`:
+
+```
+$ security-badger --svg vulns.svg tests/data/sample-audit.json
+2025-03-20T14:37:08.839Z INFO  [security_badger] Low Severity Vulnerabilities = 75
+2025-03-20T14:37:08.839Z INFO  [security_badger] Medium Severity Vulnerabilities = 25
+2025-03-20T14:37:08.839Z INFO  [security_badger] High Severity Vulnerabilities = 3
+2025-03-20T14:37:08.839Z INFO  [security_badger] Critical Severity Vulnerabilities = 0
+```
+
+![filtered.svg](examples/filtered.svg)

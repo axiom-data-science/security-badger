@@ -1,3 +1,7 @@
+use std::fmt::Display;
+
+use convert_case::{Case, Casing};
+use strum_macros::{VariantNames, AsRefStr};
 use serde::{Serialize, Deserialize};
 use chrono::{DateTime, Utc};
 
@@ -22,9 +26,19 @@ impl Severity {
             Severity::Critical => 4,
         }
     }
+
+    pub fn short(&self) -> &str {
+        match self {
+            Severity::Unknown => "U",
+            Severity::Low => "L",
+            Severity::Medium => "M",
+            Severity::High => "H",
+            Severity::Critical => "C!",
+        }
+    }
 }
 
-#[derive(Serialize, Deserialize, clap::ValueEnum, Clone, Debug, PartialEq, Eq)]
+#[derive(Serialize, Deserialize, VariantNames, AsRefStr, clap::ValueEnum, Clone, Debug, PartialEq, Eq)]
 #[serde(rename_all = "snake_case")]
 pub enum VulnerabilityStatus {
     Unknown,
@@ -35,6 +49,12 @@ pub enum VulnerabilityStatus {
     WillNotFix,
     FixDeferred,
     EndOfLife,
+}
+
+impl Display for VulnerabilityStatus {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}", self.to_case(Case::Snake))
+    }
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug)]

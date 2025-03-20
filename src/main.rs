@@ -74,7 +74,13 @@ fn main() -> Result<(), Error> {
                 false
             })
             .for_each(|v| {
-                log::info!("{} {}", v.vulnerability_id, v.title);
+                log::info!(
+                    "({}) {{{}}} {} {}",
+                    v.severity.as_ref().unwrap_or(&Severity::Unknown).short(),
+                    v.status.as_ref().unwrap_or(&VulnerabilityStatus::Unknown),
+                    v.vulnerability_id,
+                    v.title
+                );
             });
     }
 
