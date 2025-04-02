@@ -9,15 +9,15 @@ use std::fs::File;
 use std::io::Write;
 
 use badge_maker::color::Color;
-use simple_logger::SimpleLogger;
-use badge_maker::BadgeBuilder;
 use badge_maker::color::NamedColor;
+use badge_maker::BadgeBuilder;
+use simple_logger::SimpleLogger;
 
 use clap::Parser;
-use security_badger::trivy::{Report, VulnerabilityStatus, VulnerabilitySummaryBuilder, Severity};
+use security_badger::trivy::{
+    Report, Severity, VulnQuery, VulnerabilityStatus, VulnerabilitySummaryBuilder,
+};
 use security_badger::Error;
-
-
 
 /// Program Arguments
 #[derive(Parser, Debug)]
@@ -43,7 +43,6 @@ struct Args {
     audit_json: String,
 }
 
-
 /// Main entry point
 fn main() -> Result<(), Error> {
     SimpleLogger::new()
@@ -61,31 +60,44 @@ fn main() -> Result<(), Error> {
     }
     let summary = builder.build(&report);
     log::info!("Low Severity Vulnerabilities = {}", summary.low_severity);
-    log::info!("Medium Severity Vulnerabilities = {}", summary.medium_severity);
+    log::info!(
+        "Medium Severity Vulnerabilities = {}",
+        summary.medium_severity
+    );
     log::info!("High Severity Vulnerabilities = {}", summary.high_severity);
-    log::info!("Critical Severity Vulnerabilities = {}", summary.critical_severity);
+    log::info!(
+        "Critical Severity Vulnerabilities = {}",
+        summary.critical_severity
+    );
     if let Some(report_sev) = &args.report_severity {
-        summary.vulnerabilities
+        summary
+            .vulnerabilities
             .iter()
             .filter(|v| {
-                if let Some(sev) = &v.severity {
-                    return sev.to_int() >= report_sev.to_int()
+                if let Some(sev) = &v.severity() {
+                    return sev.to_int() >= report_sev.to_int();
                 }
                 false
             })
             .for_each(|v| {
                 log::info!(
                     "({}) {{{}}} {} {}",
-                    v.severity.as_ref().unwrap_or(&Severity::Unknown).short(),
-                    v.status.as_ref().unwrap_or(&VulnerabilityStatus::Unknown),
-                    v.vulnerability_id,
-                    v.title
+                    v.severity().unwrap_or(&Severity::Unknown).short(),
+                    v.status().unwrap_or(&VulnerabilityStatus::Unknown),
+                    v.vulnerability_id(),
+                    v.title()
                 );
             });
     }
 
     if let Some(pth) = &args.svg {
-        let message = format!("{} / {} / {} / {}", summary.critical_severity, summary.high_severity, summary.medium_severity, summary.low_severity);
+        let message = format!(
+            "{} / {} / {} / {}",
+            summary.critical_severity,
+            summary.high_severity,
+            summary.medium_severity,
+            summary.low_severity
+        );
         let color = if summary.critical_severity > 0 {
             Color::Named(NamedColor::Red)
         } else if summary.medium_severity > 0 {
