@@ -1,0 +1,46 @@
+stages:
+  - test
+  - build-image
+  - push
+
+variables:
+  PROJ: "security-badger"
+  IMAGE: $PROJ:$CI_COMMIT_REF_NAME
+  TEST_IMAGE: $PROJ-test:$CI_COMMIT_REF_NAME
+  AXIOM_LATEST: registry.axiom/$PROJ:latest
+  AXIOM_TAG: registry.axiom/$PROJ:$CI_COMMIT_TAG
+  DOCKER_BUILDKIT: 1
+
+build_image:
+  stage: build-image
+  script:
+    - docker build $BUILDOPTS -t $IMAGE .
+
+clippy:
+  image: rust:1.79.0-slim-buster
+  stage: test
+  script:
+    - rustup component add clippy
+    - cargo clippy -- -Dwarnings
+
+test:
+  image: rust:1.79.0-slim-buster
+  stage: test
+  script:
+    - cargo test
+
+push:
+  stage: push
+  only:
+    - main
+  script:
+    - docker tag $IMAGE $AXIOM_LATEST
+    - docker push $AXIOM_LATEST
+
+push_tag:
+  stage: push
+  only:
+    - tags
+  script:
+    - docker tag $IMAGE $AXIOM_TAG
+    - docker push $AXIOM_TAG
