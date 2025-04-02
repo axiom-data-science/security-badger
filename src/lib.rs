@@ -1,7 +1,6 @@
 use thiserror::Error as ThisError;
 pub mod trivy;
 
-
 #[derive(ThisError, Debug)]
 pub enum Error {
     #[error("Read: failed to open the file for reading: {0}")]
