@@ -40,6 +40,10 @@ struct Args {
     #[arg(long)]
     svg: Option<String>,
 
+    /// SVG Badge Label to use, Defaults to "vulns"
+    #[arg(short, long, default_value = "vulns")]
+    label: String,
+
     /// Path to the audit report as JSON
     audit_json: String,
 }
@@ -94,7 +98,7 @@ fn main() -> Result<(), Error> {
     }?;
     if let Some(pth) = &args.svg {
         let svg = BadgeBuilder::new()
-            .label("vulns")
+            .label(&args.label)
             .message(&summary.badge_message())
             .color(summary.color())
             .build()
