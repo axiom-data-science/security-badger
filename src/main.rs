@@ -8,15 +8,16 @@
 use std::fs::File;
 use std::io::Write;
 
-use badge_maker::color::Color;
-use badge_maker::color::NamedColor;
 use badge_maker::BadgeBuilder;
+use security_badger::cargo_audit;
+use security_badger::trivy::VulnerabilitySummary;
+use security_badger::Badge;
+use security_badger::Severity;
+use security_badger::Summarize;
 use simple_logger::SimpleLogger;
 
 use clap::Parser;
-use security_badger::trivy::{
-    Report, Severity, VulnQuery, VulnerabilityStatus, VulnerabilitySummaryBuilder,
-};
+use security_badger::trivy::{Report, VulnQuery, VulnerabilityStatus, VulnerabilitySummaryBuilder};
 use security_badger::Error;
 
 /// Program Arguments
@@ -27,9 +28,9 @@ struct Args {
     #[arg(short, long, default_value_t = false)]
     verbose: bool,
 
-    /// Ignore vulnerabilities with this status
+    /// Ignore vulnerabilities reported by trivy with this status
     #[arg(long)]
-    filter: Vec<VulnerabilityStatus>,
+    trivy_filter: Vec<VulnerabilityStatus>,
 
     /// Log vulnerabilities with at least this severity
     #[arg(long)]
@@ -43,6 +44,42 @@ struct Args {
     audit_json: String,
 }
 
+pub enum Reporting {
+    Trivy(VulnerabilitySummary),
+    CargoAudit,
+}
+
+fn handle_trivy(args: &Args) -> Result<Box<dyn Badge>, Error> {
+    let report: Report = {
+        let f = File::open(&args.audit_json).map_err(Error::Read)?;
+        serde_json::from_reader(f).map_err(Error::Json)?
+    };
+    let mut builder = VulnerabilitySummaryBuilder::new();
+    for filter_status in args.trivy_filter.iter() {
+        builder = builder.with_filter_on_status(filter_status);
+    }
+    let summary = builder.build(&report);
+    summary.summarize();
+    if let Some(report_sev) = &args.report_severity {
+        summary.report_details(&report_sev);
+    }
+    Ok(Box::new(summary))
+}
+
+fn handle_cargo_audit(args: &Args) -> Result<Box<dyn Badge>, Error> {
+    let report: cargo_audit::Report = {
+        let f = File::open(&args.audit_json).map_err(Error::Read)?;
+        serde_json::from_reader(f).map_err(Error::Json)?
+    };
+    let summary = cargo_audit::VulnerabilitySummary::from(report);
+    summary.summarize();
+    if let Some(report_sev) = &args.report_severity {
+        summary.report_details(report_sev);
+    }
+
+    Ok(Box::new(summary))
+}
+
 /// Main entry point
 fn main() -> Result<(), Error> {
     SimpleLogger::new()
@@ -50,65 +87,16 @@ fn main() -> Result<(), Error> {
         .expect("Failed to initialize logging.");
     // Parse arguments
     let args = Args::parse();
-    let report: Report = {
-        let f = File::open(args.audit_json).map_err(Error::Read)?;
-        serde_json::from_reader(f).map_err(Error::Json)?
-    };
-    let mut builder = VulnerabilitySummaryBuilder::new();
-    for filter_status in args.filter.iter() {
-        builder = builder.with_filter_on_status(filter_status);
-    }
-    let summary = builder.build(&report);
-    log::info!("Low Severity Vulnerabilities = {}", summary.low_severity);
-    log::info!(
-        "Medium Severity Vulnerabilities = {}",
-        summary.medium_severity
-    );
-    log::info!("High Severity Vulnerabilities = {}", summary.high_severity);
-    log::info!(
-        "Critical Severity Vulnerabilities = {}",
-        summary.critical_severity
-    );
-    if let Some(report_sev) = &args.report_severity {
-        summary
-            .vulnerabilities
-            .iter()
-            .filter(|v| {
-                if let Some(sev) = &v.severity() {
-                    return sev.to_int() >= report_sev.to_int();
-                }
-                false
-            })
-            .for_each(|v| {
-                log::info!(
-                    "({}) {{{}}} {} {}",
-                    v.severity().unwrap_or(&Severity::Unknown).short(),
-                    v.status().unwrap_or(&VulnerabilityStatus::Unknown),
-                    v.vulnerability_id(),
-                    v.title()
-                );
-            });
-    }
-
+    let summary = match handle_trivy(&args) {
+        Err(Error::Json(_)) => handle_cargo_audit(&args),
+        Err(e) => Err(e),
+        Ok(v) => Ok(v),
+    }?;
     if let Some(pth) = &args.svg {
-        let message = format!(
-            "{} / {} / {} / {}",
-            summary.critical_severity,
-            summary.high_severity,
-            summary.medium_severity,
-            summary.low_severity
-        );
-        let color = if summary.critical_severity > 0 {
-            Color::Named(NamedColor::Red)
-        } else if summary.medium_severity > 0 {
-            Color::Named(NamedColor::Orange)
-        } else {
-            Color::Named(NamedColor::Green)
-        };
         let svg = BadgeBuilder::new()
             .label("vulns")
-            .message(&message)
-            .color(color)
+            .message(&summary.badge_message())
+            .color(summary.color())
             .build()
             .map_err(Error::Svg)?
             .svg();

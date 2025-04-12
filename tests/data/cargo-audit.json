@@ -1,0 +1,1467 @@
+{
+    "database": {
+        "advisory-count": 752,
+        "last-commit": "1273f0099ce6882659ff64b852c8fdb5f8cdd5b9",
+        "last-updated": "2025-04-10T14:29:37+02:00"
+    },
+    "lockfile": {
+        "dependency-count": 221
+    },
+    "settings": {
+        "target_arch": [],
+        "target_os": [],
+        "severity": null,
+        "ignore": [],
+        "informational_warnings": [
+            "unmaintained",
+            "unsound",
+            "notice"
+        ]
+    },
+    "vulnerabilities": {
+        "found": true,
+        "count": 8,
+        "list": [
+            {
+                "advisory": {
+                    "id": "RUSTSEC-2021-0131",
+                    "package": "brotli-sys",
+                    "title": "Integer overflow in the bundled Brotli C library",
+                    "description": "A buffer overflow exists in the Brotli library versions prior to 1.0.8 where an attacker controlling the input length of a \"one-shot\" decompression request to a script can trigger a crash, which happens when copying over chunks of data larger than 2 GiB.\n\nAn updated version of `brotli-sys` has not been released. If one cannot update the C library, its authors recommend to use the \"streaming\" API as opposed to the \"one-shot\" API, and impose chunk size limits.\n\nIn Rust the issue can be mitigated by migrating to the `brotli` crate, which provides a Rust implementation of Brotli compression and decompression that is not affected by this issue.",
+                    "date": "2021-12-20",
+                    "aliases": [
+                        "CVE-2020-8927"
+                    ],
+                    "related": [],
+                    "collection": "crates",
+                    "categories": [
+                        "memory-corruption"
+                    ],
+                    "keywords": [
+                        "integer-overflow"
+                    ],
+                    "cvss": null,
+                    "informational": null,
+                    "references": [
+                        "https://github.com/google/brotli/releases/tag/v1.0.9"
+                    ],
+                    "source": null,
+                    "url": "https://github.com/bitemyapp/brotli2-rs/issues/45",
+                    "withdrawn": null,
+                    "license": "CC0-1.0"
+                },
+                "versions": {
+                    "patched": [],
+                    "unaffected": []
+                },
+                "affected": {
+                    "arch": [],
+                    "os": [],
+                    "functions": {}
+                },
+                "package": {
+                    "name": "brotli-sys",
+                    "version": "0.3.2",
+                    "source": "registry+https://github.com/rust-lang/crates.io-index",
+                    "checksum": "4445dea95f4c2b41cde57cc9fee236ae4dbae88d8fcbdb4750fc1bb5d86aaecd",
+                    "dependencies": [
+                        {
+                            "name": "cc",
+                            "version": "1.2.19",
+                            "source": "registry+https://github.com/rust-lang/crates.io-index"
+                        },
+                        {
+                            "name": "libc",
+                            "version": "0.2.171",
+                            "source": "registry+https://github.com/rust-lang/crates.io-index"
+                        }
+                    ],
+                    "replace": null
+                }
+            },
+            {
+                "advisory": {
+                    "id": "RUSTSEC-2023-0034",
+                    "package": "h2",
+                    "title": "Resource exhaustion vulnerability in h2 may lead to Denial of Service (DoS)",
+                    "description": "If an attacker is able to flood the network with pairs of `HEADERS`/`RST_STREAM` frames, such that the `h2` application is not able to accept them faster than the bytes are received, the pending accept queue can grow in memory usage. Being able to do this consistently can result in excessive memory use, and eventually trigger Out Of Memory.\n\nThis flaw is corrected in [hyperium/h2#668](https://github.com/hyperium/h2/pull/668), which restricts remote reset stream count by default.",
+                    "date": "2023-04-14",
+                    "aliases": [
+                        "CVE-2023-26964",
+                        "GHSA-f8vr-r385-rh5r"
+                    ],
+                    "related": [],
+                    "collection": "crates",
+                    "categories": [
+                        "denial-of-service"
+                    ],
+                    "keywords": [
+                        "http",
+                        "http2",
+                        "h2"
+                    ],
+                    "cvss": null,
+                    "informational": null,
+                    "references": [],
+                    "source": null,
+                    "url": "https://github.com/hyperium/hyper/issues/2877",
+                    "withdrawn": null,
+                    "license": "CC0-1.0"
+                },
+                "versions": {
+                    "patched": [
+                        ">=0.3.17"
+                    ],
+                    "unaffected": []
+                },
+                "affected": null,
+                "package": {
+                    "name": "h2",
+                    "version": "0.1.26",
+                    "source": "registry+https://github.com/rust-lang/crates.io-index",
+                    "checksum": "a5b34c246847f938a410a03c5458c7fee2274436675e76d8b903c08efc29c462",
+                    "dependencies": [
+                        {
+                            "name": "byteorder",
+                            "version": "1.5.0",
+                            "source": "registry+https://github.com/rust-lang/crates.io-index"
+                        },
+                        {
+                            "name": "bytes",
+                            "version": "0.4.12",
+                            "source": "registry+https://github.com/rust-lang/crates.io-index"
+                        },
+                        {
+                            "name": "fnv",
+                            "version": "1.0.7",
+                            "source": "registry+https://github.com/rust-lang/crates.io-index"
+                        },
+                        {
+                            "name": "futures",
+                            "version": "0.1.31",
+                            "source": "registry+https://github.com/rust-lang/crates.io-index"
+                        },
+                        {
+                            "name": "http",
+                            "version": "0.1.21",
+                            "source": "registry+https://github.com/rust-lang/crates.io-index"
+                        },
+                        {
+                            "name": "indexmap",
+                            "version": "1.9.3",
+                            "source": "registry+https://github.com/rust-lang/crates.io-index"
+                        },
+                        {
+                            "name": "log",
+                            "version": "0.4.27",
+                            "source": "registry+https://github.com/rust-lang/crates.io-index"
+                        },
+                        {
+                            "name": "slab",
+                            "version": "0.4.9",
+                            "source": "registry+https://github.com/rust-lang/crates.io-index"
+                        },
+                        {
+                            "name": "string",
+                            "version": "0.2.1",
+                            "source": "registry+https://github.com/rust-lang/crates.io-index"
+                        },
+                        {
+                            "name": "tokio-io",
+                            "version": "0.1.13",
+                            "source": "registry+https://github.com/rust-lang/crates.io-index"
+                        }
+                    ],
+                    "replace": null
+                }
+            },
+            {
+                "advisory": {
+                    "id": "RUSTSEC-2024-0332",
+                    "package": "h2",
+                    "title": "Degradation of service in h2 servers with CONTINUATION Flood",
+                    "description": "An attacker can send a flood of CONTINUATION frames, causing `h2` to process them indefinitely.\nThis results in an increase in CPU usage.\n\nTokio task budget helps prevent this from a complete denial-of-service, as the server can still\nrespond to legitimate requests, albeit with increased latency.\n\nMore details at \"https://seanmonstar.com/blog/hyper-http2-continuation-flood/.\n\nPatches available for 0.4.x and 0.3.x versions.",
+                    "date": "2024-04-03",
+                    "aliases": [
+                        "GHSA-q6cp-qfwq-4gcv"
+                    ],
+                    "related": [],
+                    "collection": "crates",
+                    "categories": [
+                        "denial-of-service"
+                    ],
+                    "keywords": [
+                        "http",
+                        "http2",
+                        "h2"
+                    ],
+                    "cvss": null,
+                    "informational": null,
+                    "references": [
+                        "https://seanmonstar.com/blog/hyper-http2-continuation-flood/"
+                    ],
+                    "source": null,
+                    "url": null,
+                    "withdrawn": null,
+                    "license": "CC0-1.0"
+                },
+                "versions": {
+                    "patched": [
+                        "^0.3.26",
+                        ">=0.4.4"
+                    ],
+                    "unaffected": []
+                },
+                "affected": null,
+                "package": {
+                    "name": "h2",
+                    "version": "0.1.26",
+                    "source": "registry+https://github.com/rust-lang/crates.io-index",
+                    "checksum": "a5b34c246847f938a410a03c5458c7fee2274436675e76d8b903c08efc29c462",
+                    "dependencies": [
+                        {
+                            "name": "byteorder",
+                            "version": "1.5.0",
+                            "source": "registry+https://github.com/rust-lang/crates.io-index"
+                        },
+                        {
+                            "name": "bytes",
+                            "version": "0.4.12",
+                            "source": "registry+https://github.com/rust-lang/crates.io-index"
+                        },
+                        {
+                            "name": "fnv",
+                            "version": "1.0.7",
+                            "source": "registry+https://github.com/rust-lang/crates.io-index"
+                        },
+                        {
+                            "name": "futures",
+                            "version": "0.1.31",
+                            "source": "registry+https://github.com/rust-lang/crates.io-index"
+                        },
+                        {
+                            "name": "http",
+                            "version": "0.1.21",
+                            "source": "registry+https://github.com/rust-lang/crates.io-index"
+                        },
+                        {
+                            "name": "indexmap",
+                            "version": "1.9.3",
+                            "source": "registry+https://github.com/rust-lang/crates.io-index"
+                        },
+                        {
+                            "name": "log",
+                            "version": "0.4.27",
+                            "source": "registry+https://github.com/rust-lang/crates.io-index"
+                        },
+                        {
+                            "name": "slab",
+                            "version": "0.4.9",
+                            "source": "registry+https://github.com/rust-lang/crates.io-index"
+                        },
+                        {
+                            "name": "string",
+                            "version": "0.2.1",
+                            "source": "registry+https://github.com/rust-lang/crates.io-index"
+                        },
+                        {
+                            "name": "tokio-io",
+                            "version": "0.1.13",
+                            "source": "registry+https://github.com/rust-lang/crates.io-index"
+                        }
+                    ],
+                    "replace": null
+                }
+            },
+            {
+                "advisory": {
+                    "id": "RUSTSEC-2024-0003",
+                    "package": "h2",
+                    "title": "Resource exhaustion vulnerability in h2 may lead to Denial of Service (DoS)",
+                    "description": "An attacker with an HTTP/2 connection to an affected endpoint can send a steady stream of invalid frames to force the\ngeneration of reset frames on the victim endpoint.\nBy closing their recv window, the attacker could then force these resets to be queued in an unbounded fashion,\nresulting in Out Of Memory (OOM) and high CPU usage.\n\nThis fix is corrected in [hyperium/h2#737](https://github.com/hyperium/h2/pull/737), which limits the total number of\ninternal error resets emitted by default before the connection is closed.",
+                    "date": "2024-01-17",
+                    "aliases": [
+                        "GHSA-8r5v-vm4m-4g25"
+                    ],
+                    "related": [
+                        "CVE-2019-9514"
+                    ],
+                    "collection": "crates",
+                    "categories": [
+                        "denial-of-service"
+                    ],
+                    "keywords": [
+                        "http",
+                        "http2",
+                        "h2"
+                    ],
+                    "cvss": null,
+                    "informational": null,
+                    "references": [
+                        "https://github.com/Netflix/security-bulletins/blob/master/advisories/third-party/2019-002.md"
+                    ],
+                    "source": null,
+                    "url": null,
+                    "withdrawn": null,
+                    "license": "CC0-1.0"
+                },
+                "versions": {
+                    "patched": [
+                        "^0.3.24",
+                        ">=0.4.2"
+                    ],
+                    "unaffected": []
+                },
+                "affected": null,
+                "package": {
+                    "name": "h2",
+                    "version": "0.1.26",
+                    "source": "registry+https://github.com/rust-lang/crates.io-index",
+                    "checksum": "a5b34c246847f938a410a03c5458c7fee2274436675e76d8b903c08efc29c462",
+                    "dependencies": [
+                        {
+                            "name": "byteorder",
+                            "version": "1.5.0",
+                            "source": "registry+https://github.com/rust-lang/crates.io-index"
+                        },
+                        {
+                            "name": "bytes",
+                            "version": "0.4.12",
+                            "source": "registry+https://github.com/rust-lang/crates.io-index"
+                        },
+                        {
+                            "name": "fnv",
+                            "version": "1.0.7",
+                            "source": "registry+https://github.com/rust-lang/crates.io-index"
+                        },
+                        {
+                            "name": "futures",
+                            "version": "0.1.31",
+                            "source": "registry+https://github.com/rust-lang/crates.io-index"
+                        },
+                        {
+                            "name": "http",
+                            "version": "0.1.21",
+                            "source": "registry+https://github.com/rust-lang/crates.io-index"
+                        },
+                        {
+                            "name": "indexmap",
+                            "version": "1.9.3",
+                            "source": "registry+https://github.com/rust-lang/crates.io-index"
+                        },
+                        {
+                            "name": "log",
+                            "version": "0.4.27",
+                            "source": "registry+https://github.com/rust-lang/crates.io-index"
+                        },
+                        {
+                            "name": "slab",
+                            "version": "0.4.9",
+                            "source": "registry+https://github.com/rust-lang/crates.io-index"
+                        },
+                        {
+                            "name": "string",
+                            "version": "0.2.1",
+                            "source": "registry+https://github.com/rust-lang/crates.io-index"
+                        },
+                        {
+                            "name": "tokio-io",
+                            "version": "0.1.13",
+                            "source": "registry+https://github.com/rust-lang/crates.io-index"
+                        }
+                    ],
+                    "replace": null
+                }
+            },
+            {
+                "advisory": {
+                    "id": "RUSTSEC-2024-0421",
+                    "package": "idna",
+                    "title": "`idna` accepts Punycode labels that do not produce any non-ASCII when decoded",
+                    "description": "`idna` 0.5.0 and earlier accepts Punycode labels that do not produce any non-ASCII output, which means that either ASCII labels or the empty root label can be masked such that they appear unequal without IDNA processing or when processed with a different implementation and equal when processed with `idna` 0.5.0 or earlier.\n\nConcretely, `example.org` and `xn--example-.org` become equal after processing by `idna` 0.5.0 or earlier. Also, `example.org.xn--` and `example.org.` become equal after processing by `idna` 0.5.0 or earlier.\n\nIn applications using `idna` (but not in `idna` itself) this may be able to lead to privilege escalation when host name comparison is part of a privilege check and the behavior is combined with a client that resolves domains with such labels instead of treating them as errors that preclude DNS resolution / URL fetching and with the attacker managing to introduce a DNS entry (and TLS certificate) for an `xn--`-masked name that turns into the name of the target when processed by `idna` 0.5.0 or earlier.\n\n## Remedy\n\nUpgrade to `idna` 1.0.3 or later, if depending on `idna` directly, or to `url` 2.5.4 or later, if depending on `idna` via `url`. (This issue was fixed in `idna` 1.0.0, but versions earlier than 1.0.3 are not recommended for other reasons.)\n\nWhen upgrading, please take a moment to read about [alternative Unicode back ends for `idna`](https://docs.rs/crate/idna_adapter/latest).\n\nIf you are using Rust earlier than 1.81 in combination with SQLx 0.8.2 or earlier, please also read an [issue](https://github.com/servo/rust-url/issues/992) about combining them with `url` 2.5.4 and `idna` 1.0.3.\n\n## Additional information\n\nThis issue resulted from `idna` 0.5.0 and earlier implementing the UTS 46 specification literally on this point and the specification having this bug. The specification bug has been fixed in [revision 33 of UTS 46](https://www.unicode.org/reports/tr46/tr46-33.html#Modifications).\n\n## Acknowledgements\n\nThanks to kageshiron for recognizing the security implications of this behavior.",
+                    "date": "2024-12-09",
+                    "aliases": [
+                        "CVE-2024-12224"
+                    ],
+                    "related": [],
+                    "collection": "crates",
+                    "categories": [
+                        "privilege-escalation"
+                    ],
+                    "keywords": [
+                        "idna",
+                        "punycode",
+                        "same-origin",
+                        "domain-name"
+                    ],
+                    "cvss": null,
+                    "informational": null,
+                    "references": [],
+                    "source": null,
+                    "url": "https://bugzilla.mozilla.org/show_bug.cgi?id=1887898",
+                    "withdrawn": null,
+                    "license": "CC0-1.0"
+                },
+                "versions": {
+                    "patched": [
+                        ">=1.0.0"
+                    ],
+                    "unaffected": []
+                },
+                "affected": null,
+                "package": {
+                    "name": "idna",
+                    "version": "0.1.5",
+                    "source": "registry+https://github.com/rust-lang/crates.io-index",
+                    "checksum": "38f09e0f0b1fb55fdee1f17470ad800da77af5186a1a76c026b679358b7e844e",
+                    "dependencies": [
+                        {
+                            "name": "matches",
+                            "version": "0.1.10",
+                            "source": "registry+https://github.com/rust-lang/crates.io-index"
+                        },
+                        {
+                            "name": "unicode-bidi",
+                            "version": "0.3.18",
+                            "source": "registry+https://github.com/rust-lang/crates.io-index"
+                        },
+                        {
+                            "name": "unicode-normalization",
+                            "version": "0.1.24",
+                            "source": "registry+https://github.com/rust-lang/crates.io-index"
+                        }
+                    ],
+                    "replace": null
+                }
+            },
+            {
+                "advisory": {
+                    "id": "RUSTSEC-2022-0040",
+                    "package": "owning_ref",
+                    "title": "Multiple soundness issues in `owning_ref`",
+                    "description": "- `OwningRef::map_with_owner` is [unsound](https://github.com/Kimundi/owning-ref-rs/issues/77) and may result in a use-after-free.\n- `OwningRef::map` is [unsound](https://github.com/Kimundi/owning-ref-rs/issues/71) and may result in a use-after-free.\n- `OwningRefMut::as_owner` and `OwningRefMut::as_owner_mut` are [unsound](https://github.com/Kimundi/owning-ref-rs/issues/61) and may result in a use-after-free.\n- The crate [violates Rust's aliasing rules](https://github.com/Kimundi/owning-ref-rs/issues/49), which may cause miscompilations on recent compilers that emit the LLVM `noalias` attribute.\n\n`safer_owning_ref` is a replacement crate which fixes these issues.\nNo patched versions of the original crate are available, and the maintainer is unresponsive.",
+                    "date": "2022-01-26",
+                    "aliases": [
+                        "GHSA-9qxh-258v-666c"
+                    ],
+                    "related": [],
+                    "collection": "crates",
+                    "categories": [
+                        "memory-corruption"
+                    ],
+                    "keywords": [],
+                    "cvss": null,
+                    "informational": null,
+                    "references": [
+                        "https://github.com/Kimundi/owning-ref-rs/issues/49",
+                        "https://github.com/Kimundi/owning-ref-rs/issues/61",
+                        "https://github.com/Kimundi/owning-ref-rs/issues/71",
+                        "https://github.com/Kimundi/owning-ref-rs/issues/77"
+                    ],
+                    "source": null,
+                    "url": "https://github.com/noamtashma/owning-ref-unsoundness",
+                    "withdrawn": null,
+                    "license": "CC0-1.0"
+                },
+                "versions": {
+                    "patched": [],
+                    "unaffected": []
+                },
+                "affected": null,
+                "package": {
+                    "name": "owning_ref",
+                    "version": "0.4.1",
+                    "source": "registry+https://github.com/rust-lang/crates.io-index",
+                    "checksum": "6ff55baddef9e4ad00f88b6c743a2a8062d4c6ade126c2a528644b8e444d52ce",
+                    "dependencies": [
+                        {
+                            "name": "stable_deref_trait",
+                            "version": "1.2.0",
+                            "source": "registry+https://github.com/rust-lang/crates.io-index"
+                        }
+                    ],
+                    "replace": null
+                }
+            },
+            {
+                "advisory": {
+                    "id": "RUSTSEC-2020-0071",
+                    "package": "time",
+                    "title": "Potential segfault in the time crate",
+                    "description": "### Impact\n\nThe affected functions set environment variables without synchronization. On Unix-like operating systems, this can crash in multithreaded programs. Programs may segfault due to dereferencing a dangling pointer if an environment variable is read in a different thread than the affected functions. This may occur without the user's knowledge, notably in the Rust standard library or third-party libraries.\n\nThe affected functions from time 0.2.7 through 0.2.22 are:\n\n- `time::UtcOffset::local_offset_at`\n- `time::UtcOffset::try_local_offset_at`\n- `time::UtcOffset::current_local_offset`\n- `time::UtcOffset::try_current_local_offset`\n- `time::OffsetDateTime::now_local`\n- `time::OffsetDateTime::try_now_local`\n\nThe affected functions in time 0.1 (all versions) are:\n\n- `time::at_utc`\n- `time::at`\n- `time::now`\n- `time::tzset`\n\nNon-Unix targets (including Windows and wasm) are unaffected.\n\n### Patches\n\nPending a proper fix, the internal method that determines the local offset has been modified to always return `None` on the affected operating systems. This has the effect of returning an `Err` on the `try_*` methods and `UTC` on the non-`try_*` methods.\n\nUsers and library authors with time in their dependency tree should perform `cargo update`, which will pull in the updated, unaffected code.\n\nUsers of time 0.1 do not have a patch and should upgrade to an unaffected version: time 0.2.23 or greater or the 0.3 series.\n\n### Workarounds\n\nA possible workaround for crates affected through the transitive dependency in `chrono`, is to avoid using the default `oldtime` feature dependency of the `chrono` crate by disabling its `default-features` and manually specifying the required features instead.\n\n#### Examples:\n\n`Cargo.toml`:  \n\n```toml\nchrono = { version = \"0.4\", default-features = false, features = [\"serde\"] }\n```\n\n```toml\nchrono = { version = \"0.4.22\", default-features = false, features = [\"clock\"] }\n```\n\nCommandline:  \n\n```bash\ncargo add chrono --no-default-features -F clock\n```\n\nSources:  \n - [chronotope/chrono#602 (comment)](https://github.com/chronotope/chrono/issues/602#issuecomment-1242149249)  \n - [vityafx/serde-aux#21](https://github.com/vityafx/serde-aux/issues/21)",
+                    "date": "2020-11-18",
+                    "aliases": [
+                        "CVE-2020-26235",
+                        "GHSA-wcg3-cvx6-7396"
+                    ],
+                    "related": [],
+                    "collection": "crates",
+                    "categories": [
+                        "code-execution",
+                        "memory-corruption"
+                    ],
+                    "keywords": [
+                        "segfault"
+                    ],
+                    "cvss": "CVSS:3.1/AV:L/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+                    "informational": null,
+                    "references": [],
+                    "source": null,
+                    "url": "https://github.com/time-rs/time/issues/293",
+                    "withdrawn": null,
+                    "license": "CC0-1.0"
+                },
+                "versions": {
+                    "patched": [
+                        ">=0.2.23"
+                    ],
+                    "unaffected": [
+                        "=0.2.0",
+                        "=0.2.1",
+                        "=0.2.2",
+                        "=0.2.3",
+                        "=0.2.4",
+                        "=0.2.5",
+                        "=0.2.6"
+                    ]
+                },
+                "affected": {
+                    "arch": [],
+                    "os": [
+                        "linux",
+                        "redox",
+                        "solaris",
+                        "android",
+                        "ios",
+                        "macos",
+                        "netbsd",
+                        "openbsd",
+                        "freebsd"
+                    ],
+                    "functions": {
+                        "time::OffsetDateTime::now_local": [
+                            "<0.2.23"
+                        ],
+                        "time::OffsetDateTime::try_now_local": [
+                            "<0.2.23"
+                        ],
+                        "time::UtcOffset::current_local_offset": [
+                            "<0.2.23"
+                        ],
+                        "time::UtcOffset::local_offset_at": [
+                            "<0.2.23"
+                        ],
+                        "time::UtcOffset::try_current_local_offset": [
+                            "<0.2.23"
+                        ],
+                        "time::UtcOffset::try_local_offset_at": [
+                            "<0.2.23"
+                        ],
+                        "time::at": [
+                            "^0.1"
+                        ],
+                        "time::at_utc": [
+                            "^0.1"
+                        ],
+                        "time::now": [
+                            "^0.1"
+                        ]
+                    }
+                },
+                "package": {
+                    "name": "time",
+                    "version": "0.1.45",
+                    "source": "registry+https://github.com/rust-lang/crates.io-index",
+                    "checksum": "1b797afad3f312d1c66a56d11d0316f916356d11bd158fbc6ca6389ff6bf805a",
+                    "dependencies": [
+                        {
+                            "name": "libc",
+                            "version": "0.2.171",
+                            "source": "registry+https://github.com/rust-lang/crates.io-index"
+                        },
+                        {
+                            "name": "wasi",
+                            "version": "0.10.0+wasi-snapshot-preview1",
+                            "source": "registry+https://github.com/rust-lang/crates.io-index"
+                        },
+                        {
+                            "name": "winapi",
+                            "version": "0.3.9",
+                            "source": "registry+https://github.com/rust-lang/crates.io-index"
+                        }
+                    ],
+                    "replace": null
+                }
+            },
+            {
+                "advisory": {
+                    "id": "RUSTSEC-2021-0124",
+                    "package": "tokio",
+                    "title": "Data race when sending and receiving after closing a `oneshot` channel",
+                    "description": "If a `tokio::sync::oneshot` channel is closed (via the\n[`oneshot::Receiver::close`] method), a data race may occur if the\n`oneshot::Sender::send` method is called while the corresponding\n`oneshot::Receiver` is `await`ed or calling `try_recv`.\n\nWhen these methods are called concurrently on a closed channel, the two halves\nof the channel can concurrently access a shared memory location, resulting in a\ndata race. This has been observed to [cause memory corruption][corruption].\n\nNote that the race only occurs when **both** halves of the channel are used\nafter the `Receiver` half has called `close`. Code where `close` is not used, or where the\n`Receiver` is not `await`ed and `try_recv` is not called after calling `close`,\nis not affected.\n\nSee [tokio#4225][issue] for more details.\n\n[corruption]: https://github.com/tokio-rs/tokio/issues/4225#issuecomment-967434847\n[issue]: https://github.com/tokio-rs/tokio/issues/4225\n[`oneshot::Receiver::close`]: https://docs.rs/tokio/1.14.0/tokio/sync/oneshot/struct.Receiver.html#method.close",
+                    "date": "2021-11-16",
+                    "aliases": [
+                        "CVE-2021-45710",
+                        "GHSA-fg7r-2g4j-5cgr"
+                    ],
+                    "related": [],
+                    "collection": "crates",
+                    "categories": [
+                        "memory-corruption",
+                        "thread-safety"
+                    ],
+                    "keywords": [
+                        "race condition"
+                    ],
+                    "cvss": null,
+                    "informational": null,
+                    "references": [],
+                    "source": null,
+                    "url": "https://github.com/tokio-rs/tokio/issues/4225",
+                    "withdrawn": null,
+                    "license": "CC0-1.0"
+                },
+                "versions": {
+                    "patched": [
+                        ">=1.8.4, <1.9.0",
+                        ">=1.13.1"
+                    ],
+                    "unaffected": [
+                        "<0.1.14"
+                    ]
+                },
+                "affected": {
+                    "arch": [],
+                    "os": [],
+                    "functions": {
+                        "tokio::sync::oneshot::Receiver::close": [
+                            "<=1.13.0, >=0.1.14"
+                        ]
+                    }
+                },
+                "package": {
+                    "name": "tokio",
+                    "version": "0.1.22",
+                    "source": "registry+https://github.com/rust-lang/crates.io-index",
+                    "checksum": "5a09c0b5bb588872ab2f09afa13ee6e9dac11e10a0ec9e8e3ba39a5a5d530af6",
+                    "dependencies": [
+                        {
+                            "name": "bytes",
+                            "version": "0.4.12",
+                            "source": "registry+https://github.com/rust-lang/crates.io-index"
+                        },
+                        {
+                            "name": "futures",
+                            "version": "0.1.31",
+                            "source": "registry+https://github.com/rust-lang/crates.io-index"
+                        },
+                        {
+                            "name": "mio",
+                            "version": "0.6.23",
+                            "source": "registry+https://github.com/rust-lang/crates.io-index"
+                        },
+                        {
+                            "name": "num_cpus",
+                            "version": "1.16.0",
+                            "source": "registry+https://github.com/rust-lang/crates.io-index"
+                        },
+                        {
+                            "name": "tokio-codec",
+                            "version": "0.1.2",
+                            "source": "registry+https://github.com/rust-lang/crates.io-index"
+                        },
+                        {
+                            "name": "tokio-current-thread",
+                            "version": "0.1.7",
+                            "source": "registry+https://github.com/rust-lang/crates.io-index"
+                        },
+                        {
+                            "name": "tokio-executor",
+                            "version": "0.1.10",
+                            "source": "registry+https://github.com/rust-lang/crates.io-index"
+                        },
+                        {
+                            "name": "tokio-fs",
+                            "version": "0.1.7",
+                            "source": "registry+https://github.com/rust-lang/crates.io-index"
+                        },
+                        {
+                            "name": "tokio-io",
+                            "version": "0.1.13",
+                            "source": "registry+https://github.com/rust-lang/crates.io-index"
+                        },
+                        {
+                            "name": "tokio-reactor",
+                            "version": "0.1.12",
+                            "source": "registry+https://github.com/rust-lang/crates.io-index"
+                        },
+                        {
+                            "name": "tokio-sync",
+                            "version": "0.1.8",
+                            "source": "registry+https://github.com/rust-lang/crates.io-index"
+                        },
+                        {
+                            "name": "tokio-tcp",
+                            "version": "0.1.4",
+                            "source": "registry+https://github.com/rust-lang/crates.io-index"
+                        },
+                        {
+                            "name": "tokio-threadpool",
+                            "version": "0.1.18",
+                            "source": "registry+https://github.com/rust-lang/crates.io-index"
+                        },
+                        {
+                            "name": "tokio-timer",
+                            "version": "0.2.13",
+                            "source": "registry+https://github.com/rust-lang/crates.io-index"
+                        },
+                        {
+                            "name": "tokio-udp",
+                            "version": "0.1.6",
+                            "source": "registry+https://github.com/rust-lang/crates.io-index"
+                        },
+                        {
+                            "name": "tokio-uds",
+                            "version": "0.2.7",
+                            "source": "registry+https://github.com/rust-lang/crates.io-index"
+                        }
+                    ],
+                    "replace": null
+                }
+            }
+        ]
+    },
+    "warnings": {
+        "unmaintained": [
+            {
+                "kind": "unmaintained",
+                "package": {
+                    "name": "aes-soft",
+                    "version": "0.6.4",
+                    "source": "registry+https://github.com/rust-lang/crates.io-index",
+                    "checksum": "be14c7498ea50828a38d0e24a765ed2effe92a705885b57d029cd67d45744072",
+                    "dependencies": [
+                        {
+                            "name": "cipher",
+                            "version": "0.2.5",
+                            "source": "registry+https://github.com/rust-lang/crates.io-index"
+                        },
+                        {
+                            "name": "opaque-debug",
+                            "version": "0.3.1",
+                            "source": "registry+https://github.com/rust-lang/crates.io-index"
+                        }
+                    ],
+                    "replace": null
+                },
+                "advisory": {
+                    "id": "RUSTSEC-2021-0060",
+                    "package": "aes-soft",
+                    "title": "`aes-soft` has been merged into the `aes` crate",
+                    "description": "Please use the `aes` crate going forward. The new repository location is at:\n\n<https://github.com/RustCrypto/block-ciphers/tree/master/aes>\n\nAES-NI is now autodetected at runtime on `i686`/`x86-64` platforms.\nIf AES-NI is not present, the `aes` crate will fallback to a constant-time\nportable software implementation.\n\nTo force the use of a constant-time portable implementation on these platforms,\neven if AES-NI is available, use the new `force-soft` feature of the `aes`\ncrate to disable autodetection.",
+                    "date": "2021-04-29",
+                    "aliases": [],
+                    "related": [],
+                    "collection": "crates",
+                    "categories": [],
+                    "keywords": [],
+                    "cvss": null,
+                    "informational": "unmaintained",
+                    "references": [],
+                    "source": null,
+                    "url": "https://github.com/RustCrypto/block-ciphers/pull/200",
+                    "withdrawn": null,
+                    "license": "CC0-1.0"
+                },
+                "affected": null,
+                "versions": {
+                    "patched": [],
+                    "unaffected": []
+                }
+            },
+            {
+                "kind": "unmaintained",
+                "package": {
+                    "name": "aesni",
+                    "version": "0.10.0",
+                    "source": "registry+https://github.com/rust-lang/crates.io-index",
+                    "checksum": "ea2e11f5e94c2f7d386164cc2aa1f97823fed6f259e486940a71c174dd01b0ce",
+                    "dependencies": [
+                        {
+                            "name": "cipher",
+                            "version": "0.2.5",
+                            "source": "registry+https://github.com/rust-lang/crates.io-index"
+                        },
+                        {
+                            "name": "opaque-debug",
+                            "version": "0.3.1",
+                            "source": "registry+https://github.com/rust-lang/crates.io-index"
+                        }
+                    ],
+                    "replace": null
+                },
+                "advisory": {
+                    "id": "RUSTSEC-2021-0059",
+                    "package": "aesni",
+                    "title": "`aesni` has been merged into the `aes` crate",
+                    "description": "Please use the `aes` crate going forward. The new repository location is at:\n\n<https://github.com/RustCrypto/block-ciphers/tree/master/aes>\n\nAES-NI is now autodetected at runtime on `i686`/`x86-64` platforms.\nIf AES-NI is not present, the `aes` crate will fallback to a constant-time\nportable software implementation.\n\nTo prevent this fallback (and have absence of AES-NI result in an illegal\ninstruction crash instead), continue to pass the same RUSTFLAGS which were\npreviously required for the `aesni` crate to compile:\n\n```\nRUSTFLAGS=-Ctarget-feature=+aes,+ssse3\n```",
+                    "date": "2021-04-29",
+                    "aliases": [],
+                    "related": [],
+                    "collection": "crates",
+                    "categories": [],
+                    "keywords": [],
+                    "cvss": null,
+                    "informational": "unmaintained",
+                    "references": [],
+                    "source": null,
+                    "url": "https://github.com/RustCrypto/block-ciphers/pull/200",
+                    "withdrawn": null,
+                    "license": "CC0-1.0"
+                },
+                "affected": null,
+                "versions": {
+                    "patched": [],
+                    "unaffected": []
+                }
+            },
+            {
+                "kind": "unmaintained",
+                "package": {
+                    "name": "cpuid-bool",
+                    "version": "0.2.0",
+                    "source": "registry+https://github.com/rust-lang/crates.io-index",
+                    "checksum": "dcb25d077389e53838a8158c8e99174c5a9d902dee4904320db714f3c653ffba",
+                    "replace": null
+                },
+                "advisory": {
+                    "id": "RUSTSEC-2021-0064",
+                    "package": "cpuid-bool",
+                    "title": "`cpuid-bool` has been renamed to `cpufeatures`",
+                    "description": "Please use the `cpufeatures`` crate going forward:\n\n<https://github.com/RustCrypto/utils/tree/master/cpufeatures>\n\nThere will be no further releases of `cpuid-bool`.",
+                    "date": "2021-05-06",
+                    "aliases": [],
+                    "related": [],
+                    "collection": "crates",
+                    "categories": [],
+                    "keywords": [],
+                    "cvss": null,
+                    "informational": "unmaintained",
+                    "references": [],
+                    "source": null,
+                    "url": "https://github.com/RustCrypto/utils/pull/381",
+                    "withdrawn": null,
+                    "license": "CC0-1.0"
+                },
+                "affected": null,
+                "versions": {
+                    "patched": [],
+                    "unaffected": []
+                }
+            },
+            {
+                "kind": "unmaintained",
+                "package": {
+                    "name": "encoding",
+                    "version": "0.2.33",
+                    "source": "registry+https://github.com/rust-lang/crates.io-index",
+                    "checksum": "6b0d943856b990d12d3b55b359144ff341533e516d94098b1d3fc1ac666d36ec",
+                    "dependencies": [
+                        {
+                            "name": "encoding-index-japanese",
+                            "version": "1.20141219.5",
+                            "source": "registry+https://github.com/rust-lang/crates.io-index"
+                        },
+                        {
+                            "name": "encoding-index-korean",
+                            "version": "1.20141219.5",
+                            "source": "registry+https://github.com/rust-lang/crates.io-index"
+                        },
+                        {
+                            "name": "encoding-index-simpchinese",
+                            "version": "1.20141219.5",
+                            "source": "registry+https://github.com/rust-lang/crates.io-index"
+                        },
+                        {
+                            "name": "encoding-index-singlebyte",
+                            "version": "1.20141219.5",
+                            "source": "registry+https://github.com/rust-lang/crates.io-index"
+                        },
+                        {
+                            "name": "encoding-index-tradchinese",
+                            "version": "1.20141219.5",
+                            "source": "registry+https://github.com/rust-lang/crates.io-index"
+                        }
+                    ],
+                    "replace": null
+                },
+                "advisory": {
+                    "id": "RUSTSEC-2021-0153",
+                    "package": "encoding",
+                    "title": "`encoding` is unmaintained",
+                    "description": "Last release was on 2016-08-28. The [issue](https://github.com/lifthrasiir/rust-encoding/issues/127) inquiring as to the status of the crate has gone unanswered by the maintainer.\n\n## Possible alternatives\n\n- [encoding_rs](https://crates.io/crates/encoding_rs)",
+                    "date": "2021-12-05",
+                    "aliases": [],
+                    "related": [],
+                    "collection": "crates",
+                    "categories": [],
+                    "keywords": [],
+                    "cvss": null,
+                    "informational": "unmaintained",
+                    "references": [],
+                    "source": null,
+                    "url": "https://github.com/lifthrasiir/rust-encoding/issues/127",
+                    "withdrawn": null,
+                    "license": "CC0-1.0"
+                },
+                "affected": null,
+                "versions": {
+                    "patched": [],
+                    "unaffected": []
+                }
+            },
+            {
+                "kind": "unmaintained",
+                "package": {
+                    "name": "failure",
+                    "version": "0.1.8",
+                    "source": "registry+https://github.com/rust-lang/crates.io-index",
+                    "checksum": "d32e9bd16cc02eae7db7ef620b392808b89f6a5e16bb3497d159c6b92a0f4f86",
+                    "dependencies": [
+                        {
+                            "name": "backtrace",
+                            "version": "0.3.74",
+                            "source": "registry+https://github.com/rust-lang/crates.io-index"
+                        },
+                        {
+                            "name": "failure_derive",
+                            "version": "0.1.8",
+                            "source": "registry+https://github.com/rust-lang/crates.io-index"
+                        }
+                    ],
+                    "replace": null
+                },
+                "advisory": {
+                    "id": "RUSTSEC-2020-0036",
+                    "package": "failure",
+                    "title": "failure is officially deprecated/unmaintained",
+                    "description": "The `failure` crate is officially end-of-life: it has been marked as deprecated\nby the former maintainer, who has announced that there will be no updates or\nmaintenance work on it going forward.\n\nThe following are some suggested actively developed alternatives to switch to:\n\n- [`anyhow`](https://crates.io/crates/anyhow)\n- [`eyre`](https://crates.io/crates/eyre)\n- [`fehler`](https://crates.io/crates/fehler)\n- [`snafu`](https://crates.io/crates/snafu)\n- [`thiserror`](https://crates.io/crates/thiserror)",
+                    "date": "2020-05-02",
+                    "aliases": [
+                        "CVE-2019-25010",
+                        "CVE-2020-25575",
+                        "GHSA-jq66-xh47-j9f3",
+                        "GHSA-r98r-j25q-rmpr"
+                    ],
+                    "related": [],
+                    "collection": "crates",
+                    "categories": [],
+                    "keywords": [],
+                    "cvss": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
+                    "informational": "unmaintained",
+                    "references": [],
+                    "source": null,
+                    "url": "https://github.com/rust-lang-nursery/failure/pull/347",
+                    "withdrawn": null,
+                    "license": "CC0-1.0"
+                },
+                "affected": null,
+                "versions": {
+                    "patched": [],
+                    "unaffected": []
+                }
+            },
+            {
+                "kind": "unmaintained",
+                "package": {
+                    "name": "net2",
+                    "version": "0.2.39",
+                    "source": "registry+https://github.com/rust-lang/crates.io-index",
+                    "checksum": "b13b648036a2339d06de780866fbdfda0dde886de7b3af2ddeba8b14f4ee34ac",
+                    "dependencies": [
+                        {
+                            "name": "cfg-if",
+                            "version": "0.1.10",
+                            "source": "registry+https://github.com/rust-lang/crates.io-index"
+                        },
+                        {
+                            "name": "libc",
+                            "version": "0.2.171",
+                            "source": "registry+https://github.com/rust-lang/crates.io-index"
+                        },
+                        {
+                            "name": "winapi",
+                            "version": "0.3.9",
+                            "source": "registry+https://github.com/rust-lang/crates.io-index"
+                        }
+                    ],
+                    "replace": null
+                },
+                "advisory": {
+                    "id": "RUSTSEC-2020-0016",
+                    "package": "net2",
+                    "title": "`net2` crate has been deprecated; use `socket2` instead",
+                    "description": "The [`net2`](https://crates.io/crates/net2) crate has been deprecated\nand users are encouraged to considered [`socket2`](https://crates.io/crates/socket2) instead.",
+                    "date": "2020-05-01",
+                    "aliases": [],
+                    "related": [],
+                    "collection": "crates",
+                    "categories": [],
+                    "keywords": [],
+                    "cvss": null,
+                    "informational": "unmaintained",
+                    "references": [],
+                    "source": null,
+                    "url": "https://github.com/deprecrated/net2-rs/commit/3350e3819adf151709047e93f25583a5df681091",
+                    "withdrawn": null,
+                    "license": "CC0-1.0"
+                },
+                "affected": null,
+                "versions": {
+                    "patched": [],
+                    "unaffected": []
+                }
+            }
+        ],
+        "unsound": [
+            {
+                "kind": "unsound",
+                "package": {
+                    "name": "crossbeam-channel",
+                    "version": "0.3.9",
+                    "source": "registry+https://github.com/rust-lang/crates.io-index",
+                    "checksum": "c8ec7fcd21571dc78f96cc96243cab8d8f035247c3efd16c687be154c3fa9efa",
+                    "dependencies": [
+                        {
+                            "name": "crossbeam-utils",
+                            "version": "0.6.6",
+                            "source": "registry+https://github.com/rust-lang/crates.io-index"
+                        }
+                    ],
+                    "replace": null
+                },
+                "advisory": {
+                    "id": "RUSTSEC-2022-0019",
+                    "package": "crossbeam-channel",
+                    "title": "Channel creates zero value of any type",
+                    "description": "Affected versions of this crate called `mem::zeroed()` to create values of a user-supplied type `T`.\nThis is unsound e.g. if `T` is a reference type (which must be non-null).\n \nThe flaw was corrected by avoiding the use of `mem::zeroed()`, using `MaybeUninit` instead.",
+                    "date": "2022-05-10",
+                    "aliases": [
+                        "GHSA-9g55-pg62-m8hh"
+                    ],
+                    "related": [],
+                    "collection": "crates",
+                    "categories": [],
+                    "keywords": [],
+                    "cvss": null,
+                    "informational": "unsound",
+                    "references": [],
+                    "source": null,
+                    "url": "https://github.com/crossbeam-rs/crossbeam/pull/458",
+                    "withdrawn": null,
+                    "license": "CC0-1.0"
+                },
+                "affected": null,
+                "versions": {
+                    "patched": [
+                        ">=0.4.3"
+                    ],
+                    "unaffected": []
+                }
+            },
+            {
+                "kind": "unsound",
+                "package": {
+                    "name": "crossbeam-utils",
+                    "version": "0.6.6",
+                    "source": "registry+https://github.com/rust-lang/crates.io-index",
+                    "checksum": "04973fa96e96579258a5091af6003abde64af786b860f18622b82e026cca60e6",
+                    "dependencies": [
+                        {
+                            "name": "cfg-if",
+                            "version": "0.1.10",
+                            "source": "registry+https://github.com/rust-lang/crates.io-index"
+                        },
+                        {
+                            "name": "lazy_static",
+                            "version": "1.5.0",
+                            "source": "registry+https://github.com/rust-lang/crates.io-index"
+                        }
+                    ],
+                    "replace": null
+                },
+                "advisory": {
+                    "id": "RUSTSEC-2022-0041",
+                    "package": "crossbeam-utils",
+                    "title": "Unsoundness of AtomicCell<*64> arithmetics on 32-bit targets that support Atomic*64",
+                    "description": "## Impact\n\nAffected versions of this crate incorrectly assumed that the alignment of {i,u}64 was always the same as Atomic{I,U}64.\n\nHowever, the alignment of {i,u}64 on a 32-bit target can be smaller than Atomic{I,U}64.\n\nThis can cause the following problems:\n\n- Unaligned memory accesses\n- Data race\n\nCrates using fetch_* methods with AtomicCell<{i,u}64> are affected by this issue.\n\n32-bit targets without Atomic{I,U}64 and 64-bit targets are not affected by this issue.\n\n32-bit targets with Atomic{I,U}64 and {i,u}64 have the same alignment are also not affected by this issue.\n\nThe following is a complete list of the builtin targets that may be affected. (last update: nightly-2022-02-11)\n\n- armv7-apple-ios (tier 3)\n- armv7s-apple-ios (tier 3)\n- i386-apple-ios (tier 3)\n- i586-unknown-linux-gnu\n- i586-unknown-linux-musl\n- i686-apple-darwin (tier 3)\n- i686-linux-android\n- i686-unknown-freebsd\n- i686-unknown-haiku (tier 3)\n- i686-unknown-linux-gnu\n- i686-unknown-linux-musl\n- i686-unknown-netbsd (tier 3)\n- i686-unknown-openbsd (tier 3)\n- i686-wrs-vxworks (tier 3)\n\n([script to get list](https://gist.github.com/taiki-e/3c7891e8c5f5e0cbcb44d7396aabfe10))\n\n## Patches\n\nThis has been fixed in crossbeam-utils 0.8.7.\n\nAffected 0.8.x releases have been yanked.\n\nThanks to @taiki-e",
+                    "date": "2022-02-05",
+                    "aliases": [
+                        "GHSA-qc84-gqf4-9926",
+                        "CVE-2022-23639"
+                    ],
+                    "related": [],
+                    "collection": "crates",
+                    "categories": [
+                        "memory-corruption"
+                    ],
+                    "keywords": [],
+                    "cvss": null,
+                    "informational": "unsound",
+                    "references": [],
+                    "source": null,
+                    "url": "https://github.com/crossbeam-rs/crossbeam/pull/781",
+                    "withdrawn": null,
+                    "license": "CC0-1.0"
+                },
+                "affected": null,
+                "versions": {
+                    "patched": [
+                        ">=0.8.7"
+                    ],
+                    "unaffected": []
+                }
+            },
+            {
+                "kind": "unsound",
+                "package": {
+                    "name": "crossbeam-utils",
+                    "version": "0.7.2",
+                    "source": "registry+https://github.com/rust-lang/crates.io-index",
+                    "checksum": "c3c7c73a2d1e9fc0886a08b93e98eb643461230d5f1925e4036204d5f2e261a8",
+                    "dependencies": [
+                        {
+                            "name": "autocfg",
+                            "version": "1.4.0",
+                            "source": "registry+https://github.com/rust-lang/crates.io-index"
+                        },
+                        {
+                            "name": "cfg-if",
+                            "version": "0.1.10",
+                            "source": "registry+https://github.com/rust-lang/crates.io-index"
+                        },
+                        {
+                            "name": "lazy_static",
+                            "version": "1.5.0",
+                            "source": "registry+https://github.com/rust-lang/crates.io-index"
+                        }
+                    ],
+                    "replace": null
+                },
+                "advisory": {
+                    "id": "RUSTSEC-2022-0041",
+                    "package": "crossbeam-utils",
+                    "title": "Unsoundness of AtomicCell<*64> arithmetics on 32-bit targets that support Atomic*64",
+                    "description": "## Impact\n\nAffected versions of this crate incorrectly assumed that the alignment of {i,u}64 was always the same as Atomic{I,U}64.\n\nHowever, the alignment of {i,u}64 on a 32-bit target can be smaller than Atomic{I,U}64.\n\nThis can cause the following problems:\n\n- Unaligned memory accesses\n- Data race\n\nCrates using fetch_* methods with AtomicCell<{i,u}64> are affected by this issue.\n\n32-bit targets without Atomic{I,U}64 and 64-bit targets are not affected by this issue.\n\n32-bit targets with Atomic{I,U}64 and {i,u}64 have the same alignment are also not affected by this issue.\n\nThe following is a complete list of the builtin targets that may be affected. (last update: nightly-2022-02-11)\n\n- armv7-apple-ios (tier 3)\n- armv7s-apple-ios (tier 3)\n- i386-apple-ios (tier 3)\n- i586-unknown-linux-gnu\n- i586-unknown-linux-musl\n- i686-apple-darwin (tier 3)\n- i686-linux-android\n- i686-unknown-freebsd\n- i686-unknown-haiku (tier 3)\n- i686-unknown-linux-gnu\n- i686-unknown-linux-musl\n- i686-unknown-netbsd (tier 3)\n- i686-unknown-openbsd (tier 3)\n- i686-wrs-vxworks (tier 3)\n\n([script to get list](https://gist.github.com/taiki-e/3c7891e8c5f5e0cbcb44d7396aabfe10))\n\n## Patches\n\nThis has been fixed in crossbeam-utils 0.8.7.\n\nAffected 0.8.x releases have been yanked.\n\nThanks to @taiki-e",
+                    "date": "2022-02-05",
+                    "aliases": [
+                        "GHSA-qc84-gqf4-9926",
+                        "CVE-2022-23639"
+                    ],
+                    "related": [],
+                    "collection": "crates",
+                    "categories": [
+                        "memory-corruption"
+                    ],
+                    "keywords": [],
+                    "cvss": null,
+                    "informational": "unsound",
+                    "references": [],
+                    "source": null,
+                    "url": "https://github.com/crossbeam-rs/crossbeam/pull/781",
+                    "withdrawn": null,
+                    "license": "CC0-1.0"
+                },
+                "affected": null,
+                "versions": {
+                    "patched": [
+                        ">=0.8.7"
+                    ],
+                    "unaffected": []
+                }
+            },
+            {
+                "kind": "unsound",
+                "package": {
+                    "name": "failure",
+                    "version": "0.1.8",
+                    "source": "registry+https://github.com/rust-lang/crates.io-index",
+                    "checksum": "d32e9bd16cc02eae7db7ef620b392808b89f6a5e16bb3497d159c6b92a0f4f86",
+                    "dependencies": [
+                        {
+                            "name": "backtrace",
+                            "version": "0.3.74",
+                            "source": "registry+https://github.com/rust-lang/crates.io-index"
+                        },
+                        {
+                            "name": "failure_derive",
+                            "version": "0.1.8",
+                            "source": "registry+https://github.com/rust-lang/crates.io-index"
+                        }
+                    ],
+                    "replace": null
+                },
+                "advisory": {
+                    "id": "RUSTSEC-2019-0036",
+                    "package": "failure",
+                    "title": "Type confusion if __private_get_type_id__ is overridden",
+                    "description": "Safe Rust code can implement malfunctioning `__private_get_type_id__` and cause\ntype confusion when downcasting, which is an undefined behavior.\n\nUsers who derive `Fail` trait are not affected.",
+                    "date": "2019-11-13",
+                    "aliases": [
+                        "CVE-2019-25010",
+                        "CVE-2020-25575",
+                        "GHSA-jq66-xh47-j9f3",
+                        "GHSA-r98r-j25q-rmpr"
+                    ],
+                    "related": [],
+                    "collection": "crates",
+                    "categories": [],
+                    "keywords": [
+                        "unsound"
+                    ],
+                    "cvss": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
+                    "informational": "unsound",
+                    "references": [],
+                    "source": null,
+                    "url": "https://github.com/rust-lang-nursery/failure/issues/336",
+                    "withdrawn": null,
+                    "license": "CC0-1.0"
+                },
+                "affected": {
+                    "arch": [],
+                    "os": [],
+                    "functions": {
+                        "failure::Fail::__private_get_type_id__": [
+                            ">=0.1.0"
+                        ]
+                    }
+                },
+                "versions": {
+                    "patched": [],
+                    "unaffected": []
+                }
+            },
+            {
+                "kind": "unsound",
+                "package": {
+                    "name": "lock_api",
+                    "version": "0.1.5",
+                    "source": "registry+https://github.com/rust-lang/crates.io-index",
+                    "checksum": "62ebf1391f6acad60e5c8b43706dde4582df75c06698ab44511d15016bc2442c",
+                    "dependencies": [
+                        {
+                            "name": "owning_ref",
+                            "version": "0.4.1",
+                            "source": "registry+https://github.com/rust-lang/crates.io-index"
+                        },
+                        {
+                            "name": "scopeguard",
+                            "version": "0.3.3",
+                            "source": "registry+https://github.com/rust-lang/crates.io-index"
+                        }
+                    ],
+                    "replace": null
+                },
+                "advisory": {
+                    "id": "RUSTSEC-2020-0070",
+                    "package": "lock_api",
+                    "title": "Some lock_api lock guard objects can cause data races",
+                    "description": "Affected versions of lock_api had unsound implementations of the `Send` or\n`Sync` traits for some guard objects, namely:\n\n* MappedMutexGuard\n* MappedRwLockReadGuard\n* MappedRwLockWriteGuard\n* RwLockReadGuard\n* RwLockWriteGuard\n\nThese guards could allow data races through types that are not safe to `Send`\nacross thread boundaries in safe Rust code.\n\nThis issue was fixed by changing the trait bounds on the `Mapped` guard types\nand removing the `Sync` trait for the `RwLock` guards.",
+                    "date": "2020-11-08",
+                    "aliases": [
+                        "CVE-2020-35910",
+                        "CVE-2020-35911",
+                        "CVE-2020-35912",
+                        "CVE-2020-35913",
+                        "CVE-2020-35914",
+                        "GHSA-5wg8-7c9q-794v",
+                        "GHSA-gmv4-vmx3-x9f3",
+                        "GHSA-hj9h-wrgg-hgmx",
+                        "GHSA-ppj3-7jw3-8vc4",
+                        "GHSA-vh4p-6j7g-f4j9"
+                    ],
+                    "related": [],
+                    "collection": "crates",
+                    "categories": [
+                        "memory-corruption",
+                        "thread-safety"
+                    ],
+                    "keywords": [
+                        "concurrency"
+                    ],
+                    "cvss": null,
+                    "informational": "unsound",
+                    "references": [],
+                    "source": null,
+                    "url": "https://github.com/Amanieu/parking_lot/pull/262",
+                    "withdrawn": null,
+                    "license": "CC0-1.0"
+                },
+                "affected": {
+                    "arch": [],
+                    "os": [],
+                    "functions": {
+                        "lock_api::MappedMutexGuard": [
+                            ">=0.1.0"
+                        ],
+                        "lock_api::MappedRwLockReadGuard": [
+                            ">=0.1.0"
+                        ],
+                        "lock_api::MappedRwLockWriteGuard": [
+                            ">=0.1.0"
+                        ],
+                        "lock_api::RwLockReadGuard": [
+                            ">=0.1.0"
+                        ],
+                        "lock_api::RwLockWriteGuard": [
+                            ">=0.1.0"
+                        ]
+                    }
+                },
+                "versions": {
+                    "patched": [
+                        ">=0.4.2"
+                    ],
+                    "unaffected": []
+                }
+            },
+            {
+                "kind": "unsound",
+                "package": {
+                    "name": "lock_api",
+                    "version": "0.3.4",
+                    "source": "registry+https://github.com/rust-lang/crates.io-index",
+                    "checksum": "c4da24a77a3d8a6d4862d95f72e6fdb9c09a643ecdb402d754004a557f2bec75",
+                    "dependencies": [
+                        {
+                            "name": "scopeguard",
+                            "version": "1.2.0",
+                            "source": "registry+https://github.com/rust-lang/crates.io-index"
+                        }
+                    ],
+                    "replace": null
+                },
+                "advisory": {
+                    "id": "RUSTSEC-2020-0070",
+                    "package": "lock_api",
+                    "title": "Some lock_api lock guard objects can cause data races",
+                    "description": "Affected versions of lock_api had unsound implementations of the `Send` or\n`Sync` traits for some guard objects, namely:\n\n* MappedMutexGuard\n* MappedRwLockReadGuard\n* MappedRwLockWriteGuard\n* RwLockReadGuard\n* RwLockWriteGuard\n\nThese guards could allow data races through types that are not safe to `Send`\nacross thread boundaries in safe Rust code.\n\nThis issue was fixed by changing the trait bounds on the `Mapped` guard types\nand removing the `Sync` trait for the `RwLock` guards.",
+                    "date": "2020-11-08",
+                    "aliases": [
+                        "CVE-2020-35910",
+                        "CVE-2020-35911",
+                        "CVE-2020-35912",
+                        "CVE-2020-35913",
+                        "CVE-2020-35914",
+                        "GHSA-5wg8-7c9q-794v",
+                        "GHSA-gmv4-vmx3-x9f3",
+                        "GHSA-hj9h-wrgg-hgmx",
+                        "GHSA-ppj3-7jw3-8vc4",
+                        "GHSA-vh4p-6j7g-f4j9"
+                    ],
+                    "related": [],
+                    "collection": "crates",
+                    "categories": [
+                        "memory-corruption",
+                        "thread-safety"
+                    ],
+                    "keywords": [
+                        "concurrency"
+                    ],
+                    "cvss": null,
+                    "informational": "unsound",
+                    "references": [],
+                    "source": null,
+                    "url": "https://github.com/Amanieu/parking_lot/pull/262",
+                    "withdrawn": null,
+                    "license": "CC0-1.0"
+                },
+                "affected": {
+                    "arch": [],
+                    "os": [],
+                    "functions": {
+                        "lock_api::MappedMutexGuard": [
+                            ">=0.1.0"
+                        ],
+                        "lock_api::MappedRwLockReadGuard": [
+                            ">=0.1.0"
+                        ],
+                        "lock_api::MappedRwLockWriteGuard": [
+                            ">=0.1.0"
+                        ],
+                        "lock_api::RwLockReadGuard": [
+                            ">=0.1.0"
+                        ],
+                        "lock_api::RwLockWriteGuard": [
+                            ">=0.1.0"
+                        ]
+                    }
+                },
+                "versions": {
+                    "patched": [
+                        ">=0.4.2"
+                    ],
+                    "unaffected": []
+                }
+            },
+            {
+                "kind": "unsound",
+                "package": {
+                    "name": "memoffset",
+                    "version": "0.5.6",
+                    "source": "registry+https://github.com/rust-lang/crates.io-index",
+                    "checksum": "043175f069eda7b85febe4a74abbaeff828d9f8b448515d3151a14a3542811aa",
+                    "dependencies": [
+                        {
+                            "name": "autocfg",
+                            "version": "1.4.0",
+                            "source": "registry+https://github.com/rust-lang/crates.io-index"
+                        }
+                    ],
+                    "replace": null
+                },
+                "advisory": {
+                    "id": "RUSTSEC-2023-0045",
+                    "package": "memoffset",
+                    "title": "memoffset allows reading uninitialized memory",
+                    "description": "memoffset allows attempt of reading data from address `0` with arbitrary type. This behavior is an undefined behavior because address `0` to `std::mem::size_of<T>` may not have valid bit-pattern with `T`. Old implementation dereferences uninitialized memory obtained from `std::mem::align_of`. Older implementation prior to it allows using uninitialized data obtained from `std::mem::uninitialized` with arbitrary type then compute offset by taking the address of field-projection. This may also result in an undefined behavior for \"father\" that includes (directly or transitively) type that [does not allow to be uninitialized](https://doc.rust-lang.org/nightly/reference/behavior-considered-undefined.html).\n\nThis flaw was corrected by using `std::ptr::addr_of` in <https://github.com/Gilnaa/memoffset/pull/50>.",
+                    "date": "2023-06-21",
+                    "aliases": [
+                        "GHSA-wfg4-322g-9vqv"
+                    ],
+                    "related": [],
+                    "collection": "crates",
+                    "categories": [
+                        "memory-corruption"
+                    ],
+                    "keywords": [
+                        "memoffset",
+                        "offset"
+                    ],
+                    "cvss": null,
+                    "informational": "unsound",
+                    "references": [],
+                    "source": null,
+                    "url": "https://github.com/Gilnaa/memoffset/issues/24",
+                    "withdrawn": null,
+                    "license": "CC0-1.0"
+                },
+                "affected": {
+                    "arch": [],
+                    "os": [],
+                    "functions": {
+                        "memoffset::offset_of": [
+                            "<0.6.2"
+                        ]
+                    }
+                },
+                "versions": {
+                    "patched": [
+                        ">=0.6.2"
+                    ],
+                    "unaffected": []
+                }
+            }
+        ]
+    }
+}
