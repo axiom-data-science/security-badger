@@ -7,7 +7,7 @@ use enum_dispatch::enum_dispatch;
 use serde::{Deserialize, Serialize};
 use strum_macros::{AsRefStr, VariantNames};
 
-use crate::{Badge, Summarize, Severity};
+use crate::{Badge, Severity, Summarize};
 
 #[derive(
     Serialize, Deserialize, VariantNames, AsRefStr, clap::ValueEnum, Clone, Debug, PartialEq, Eq,
@@ -302,10 +302,7 @@ impl Badge for VulnerabilitySummary {
     fn badge_message(&self) -> String {
         format!(
             "{} / {} / {} / {}",
-            self.critical_severity,
-            self.high_severity,
-            self.medium_severity,
-            self.low_severity
+            self.critical_severity, self.high_severity, self.medium_severity, self.low_severity
         )
     }
 
@@ -323,10 +320,7 @@ impl Badge for VulnerabilitySummary {
 impl Summarize for VulnerabilitySummary {
     fn summarize(&self) {
         log::info!("Low Severity Vulnerabilities = {}", self.low_severity);
-        log::info!(
-            "Medium Severity Vulnerabilities = {}",
-            self.medium_severity
-        );
+        log::info!("Medium Severity Vulnerabilities = {}", self.medium_severity);
         log::info!("High Severity Vulnerabilities = {}", self.high_severity);
         log::info!(
             "Critical Severity Vulnerabilities = {}",
@@ -335,8 +329,7 @@ impl Summarize for VulnerabilitySummary {
     }
 
     fn report_details(&self, report_sev: &Severity) {
-        self
-            .vulnerabilities
+        self.vulnerabilities
             .iter()
             .filter(|v| {
                 if let Some(sev) = &v.severity() {

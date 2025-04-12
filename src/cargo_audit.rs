@@ -177,9 +177,7 @@ impl Summarize for VulnerabilitySummary {
     fn report_details(&self, report_sev: &Severity) {
         self.vulnerabilities
             .iter()
-            .filter(|v| {
-                v.severity.to_int() >= report_sev.to_int()
-            })
+            .filter(|v| v.severity.to_int() >= report_sev.to_int())
             .for_each(|v| {
                 log::info!(
                     "({}) {{{}}} {} {} {}",
@@ -197,7 +195,7 @@ impl Summarize for VulnerabilitySummary {
 mod tests {
     use std::fs::File;
 
-    use super::{Report, VulnerabilityOverview, VulnerabilitySummary};
+    use super::{Report, VulnerabilitySummary};
     #[test]
     fn test_deserialize_cargo_audit() -> Result<(), Box<dyn std::error::Error>> {
         let f = File::open("tests/data/cargo-audit-high.json")?;

@@ -1,8 +1,8 @@
 use badge_maker::color::Color;
-use thiserror::Error as ThisError;
 use serde::{Deserialize, Serialize};
-pub mod trivy;
+use thiserror::Error as ThisError;
 pub mod cargo_audit;
+pub mod trivy;
 
 #[derive(ThisError, Debug)]
 pub enum Error {
@@ -27,7 +27,6 @@ pub trait Badge {
 
     fn color(&self) -> Color;
 }
-
 
 pub trait Summarize {
     /// Log a brief summary of the vulnerabiltiies identified in the report.

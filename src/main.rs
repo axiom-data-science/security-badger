@@ -17,7 +17,7 @@ use security_badger::Summarize;
 use simple_logger::SimpleLogger;
 
 use clap::Parser;
-use security_badger::trivy::{Report, VulnQuery, VulnerabilityStatus, VulnerabilitySummaryBuilder};
+use security_badger::trivy::{Report, VulnerabilityStatus, VulnerabilitySummaryBuilder};
 use security_badger::Error;
 
 /// Program Arguments
