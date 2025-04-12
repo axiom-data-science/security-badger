@@ -61,7 +61,7 @@ fn handle_trivy(args: &Args) -> Result<Box<dyn Badge>, Error> {
     let summary = builder.build(&report);
     summary.summarize();
     if let Some(report_sev) = &args.report_severity {
-        summary.report_details(&report_sev);
+        summary.report_details(report_sev);
     }
     Ok(Box::new(summary))
 }

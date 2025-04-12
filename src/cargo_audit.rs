@@ -92,7 +92,7 @@ impl From<&rustsec::Vulnerability> for VulnerabilityOverview {
                 .advisory
                 .cvss
                 .as_ref()
-                .map_or(Severity::Unknown, |cvss| cvss.severity().clone().into()),
+                .map_or(Severity::Unknown, |cvss| cvss.severity().into()),
             status: VulnerabilityStatus::from(vuln),
         }
     }
@@ -139,7 +139,7 @@ impl From<Report> for VulnerabilitySummary {
             .vulnerabilities
             .list
             .iter()
-            .map(|vuln| VulnerabilityOverview::from(vuln))
+            .map(VulnerabilityOverview::from)
             .collect();
         Self::from(overviews)
     }
