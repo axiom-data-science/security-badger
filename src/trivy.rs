@@ -1,42 +1,13 @@
 use std::fmt::Display;
 
+use badge_maker::color::{Color, NamedColor};
 use chrono::{DateTime, Utc};
 use convert_case::{Case, Casing};
 use enum_dispatch::enum_dispatch;
 use serde::{Deserialize, Serialize};
 use strum_macros::{AsRefStr, VariantNames};
 
-#[derive(Serialize, Deserialize, clap::ValueEnum, Clone, Debug, PartialEq, Eq)]
-#[serde(rename_all = "UPPERCASE")]
-pub enum Severity {
-    Unknown,
-    Low,
-    Medium,
-    High,
-    Critical,
-}
-
-impl Severity {
-    pub fn to_int(&self) -> u32 {
-        match self {
-            Severity::Unknown => 0,
-            Severity::Low => 1,
-            Severity::Medium => 2,
-            Severity::High => 3,
-            Severity::Critical => 4,
-        }
-    }
-
-    pub fn short(&self) -> &str {
-        match self {
-            Severity::Unknown => "U",
-            Severity::Low => "L",
-            Severity::Medium => "M",
-            Severity::High => "H",
-            Severity::Critical => "C!",
-        }
-    }
-}
+use crate::{Badge, Severity, Summarize};
 
 #[derive(
     Serialize, Deserialize, VariantNames, AsRefStr, clap::ValueEnum, Clone, Debug, PartialEq, Eq,
@@ -324,6 +295,57 @@ impl<'a, T: IntoIterator<Item = &'a VulnerabilityType>> From<T> for Vulnerabilit
             critical_severity: crits,
             vulnerabilities,
         }
+    }
+}
+
+impl Badge for VulnerabilitySummary {
+    fn badge_message(&self) -> String {
+        format!(
+            "{} / {} / {} / {}",
+            self.critical_severity, self.high_severity, self.medium_severity, self.low_severity
+        )
+    }
+
+    fn color(&self) -> badge_maker::color::Color {
+        if self.critical_severity > 0 {
+            Color::Named(NamedColor::Red)
+        } else if self.medium_severity > 0 {
+            Color::Named(NamedColor::Orange)
+        } else {
+            Color::Named(NamedColor::Green)
+        }
+    }
+}
+
+impl Summarize for VulnerabilitySummary {
+    fn summarize(&self) {
+        log::info!("Low Severity Vulnerabilities = {}", self.low_severity);
+        log::info!("Medium Severity Vulnerabilities = {}", self.medium_severity);
+        log::info!("High Severity Vulnerabilities = {}", self.high_severity);
+        log::info!(
+            "Critical Severity Vulnerabilities = {}",
+            self.critical_severity
+        );
+    }
+
+    fn report_details(&self, report_sev: &Severity) {
+        self.vulnerabilities
+            .iter()
+            .filter(|v| {
+                if let Some(sev) = &v.severity() {
+                    return sev.to_int() >= report_sev.to_int();
+                }
+                false
+            })
+            .for_each(|v| {
+                log::info!(
+                    "({}) {{{}}} {} {}",
+                    v.severity().unwrap_or(&Severity::Unknown).short(),
+                    v.status().unwrap_or(&VulnerabilityStatus::Unknown),
+                    v.vulnerability_id(),
+                    v.title()
+                );
+            });
     }
 }
 
