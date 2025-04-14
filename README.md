@@ -3,7 +3,9 @@
 security-badger
 ===============
 
-Create badges based on audit reports
+Create badges based on audit reports. security-badger can parse trivy and
+cargo-audit reports as JSON document, and produce an SVG Badge of the severity
+breakdown of the reported vulnerabilities.
 
 Copyright 2025 Axiom Data Science, LLC
 
@@ -50,12 +52,14 @@ Arguments:
 Options:
   -v, --verbose
           Increase verbosity
-      --filter <FILTER>
-          Ignore vulnerabilities with this status [possible values: unknown, not-affected, affected, fixed, under-investigation, will-not-fix, fix-deferred, end-of-life]
+      --trivy-filter <TRIVY_FILTER>
+          Ignore vulnerabilities reported by trivy with this status [possible values: unknown, not-affected, affected, fixed, under-investigation, will-not-fix, fix-deferred, end-of-life]
       --report-severity <REPORT_SEVERITY>
           Log vulnerabilities with at least this severity [possible values: unknown, low, medium, high, critical]
       --svg <SVG>
           Output an SVG Badge
+  -l, --label <LABEL>
+          SVG Badge Label to use, Defaults to "vulns" [default: vulns]
   -h, --help
           Print help
   -V, --version
