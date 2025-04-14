@@ -48,6 +48,17 @@ push_tag:
     - docker tag $IMAGE $AXIOM_TAG
     - docker push $AXIOM_TAG
 
+trivy_scan:
+  image:
+    name: aquasec/trivy:latest
+    entrypoint: [""]
+  stage: scan
+  script:
+    - trivy image --format json --output trivy-report.json $IMAGE
+  artifacts:
+    paths:
+      - trivy-report.json
+
 build_audit:
   image: $RUST_IMAGE
   stage: scan
@@ -60,7 +71,7 @@ build_audit:
     paths:
       - cargo-audit.json
 
-badger:
+badger-cargo-audit:
   image:
     name: $IMAGE
     entrypoint: [""]
@@ -70,3 +81,14 @@ badger:
   artifacts:
     paths:
       - cargo-audit.svg
+
+badger-cargo-trivy:
+  image:
+    name: $IMAGE
+    entrypoint: [""]
+  stage: badge
+  script:
+    - security-badger --svg trivy-audit.svg --label 'Trivy' trivy-report.json
+  artifacts:
+    paths:
+      - trivy-audit.svg
