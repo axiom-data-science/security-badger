@@ -3,6 +3,8 @@
 security-badger
 ===============
 
+![logo](logo.png)
+
 Create badges based on audit reports. security-badger can parse trivy and
 cargo-audit reports as JSON document, and produce an SVG Badge of the severity
 breakdown of the reported vulnerabilities.

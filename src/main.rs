@@ -6,18 +6,20 @@
 //!
 //! TODO Example
 use std::fs::File;
+use std::io::Read;
 use std::io::Write;
 
 use badge_maker::BadgeBuilder;
-use security_badger::cargo_audit;
 use security_badger::trivy::VulnerabilitySummary;
 use security_badger::Badge;
-use security_badger::Severity;
 use security_badger::Summarize;
+use security_badger::Severity;
 use simple_logger::SimpleLogger;
 
 use clap::Parser;
-use security_badger::trivy::{Report, VulnerabilityStatus, VulnerabilitySummaryBuilder};
+use security_badger::trivy::{
+    Report, VulnQuery, VulnerabilityStatus, VulnerabilitySummaryBuilder,
+};
 use security_badger::Error;
 
 /// Program Arguments
@@ -40,24 +42,22 @@ struct Args {
     #[arg(long)]
     svg: Option<String>,
 
-    /// SVG Badge Label to use, Defaults to "vulns"
-    #[arg(short, long, default_value = "vulns")]
-    label: String,
-
     /// Path to the audit report as JSON
-    audit_json: String,
+    audit_json: Option<String>,
 }
 
-pub enum Reporting {
-    Trivy(VulnerabilitySummary),
-    CargoAudit,
+impl Args {
+    fn audit_reader(&self) -> Result<Box<dyn Read>, Error> {
+        if let Some(audit_json) = self.audit_json.as_ref() {
+            let f = File::open(audit_json).map_err(Error::Read)?;
+            Ok(Box::new(f))
+        } else {
+            Ok(Box::new(std::io::stdin()))
+        }
+    }
 }
 
-fn handle_trivy(args: &Args) -> Result<Box<dyn Badge>, Error> {
-    let report: Report = {
-        let f = File::open(&args.audit_json).map_err(Error::Read)?;
-        serde_json::from_reader(f).map_err(Error::Json)?
-    };
+fn handle_trivy(args: &Args, report: Report) -> Result<VulnerabilitySummary, Error> {
     let mut builder = VulnerabilitySummaryBuilder::new();
     for filter_status in args.trivy_filter.iter() {
         builder = builder.with_filter_on_status(filter_status);
@@ -65,23 +65,9 @@ fn handle_trivy(args: &Args) -> Result<Box<dyn Badge>, Error> {
     let summary = builder.build(&report);
     summary.summarize();
     if let Some(report_sev) = &args.report_severity {
-        summary.report_details(report_sev);
+        summary.report_details(&report_sev);
     }
-    Ok(Box::new(summary))
-}
-
-fn handle_cargo_audit(args: &Args) -> Result<Box<dyn Badge>, Error> {
-    let report: cargo_audit::Report = {
-        let f = File::open(&args.audit_json).map_err(Error::Read)?;
-        serde_json::from_reader(f).map_err(Error::Json)?
-    };
-    let summary = cargo_audit::VulnerabilitySummary::from(report);
-    summary.summarize();
-    if let Some(report_sev) = &args.report_severity {
-        summary.report_details(report_sev);
-    }
-
-    Ok(Box::new(summary))
+    Ok(summary)
 }
 
 /// Main entry point
@@ -91,14 +77,14 @@ fn main() -> Result<(), Error> {
         .expect("Failed to initialize logging.");
     // Parse arguments
     let args = Args::parse();
-    let summary = match handle_trivy(&args) {
-        Err(Error::Json(_)) => handle_cargo_audit(&args),
-        Err(e) => Err(e),
-        Ok(v) => Ok(v),
-    }?;
+    let report: Report = {
+        let f = File::open(&args.audit_json).map_err(Error::Read)?;
+        serde_json::from_reader(f).map_err(Error::Json)?
+    };
+    let summary = handle_trivy(&args, report)?;
     if let Some(pth) = &args.svg {
         let svg = BadgeBuilder::new()
-            .label(&args.label)
+            .label("vulns")
             .message(&summary.badge_message())
             .color(summary.color())
             .build()
