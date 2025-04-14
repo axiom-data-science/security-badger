@@ -82,7 +82,7 @@ badger-cargo-audit:
     paths:
       - cargo-audit.svg
 
-badger-cargo-trivy:
+badger-trivy:
   image:
     name: $IMAGE
     entrypoint: [""]
