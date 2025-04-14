@@ -1,6 +1,8 @@
 stages:
   - test
   - build-image
+  - scan
+  - badge
   - push
 
 variables:
@@ -44,3 +46,24 @@ push_tag:
   script:
     - docker tag $IMAGE $AXIOM_TAG
     - docker push $AXIOM_TAG
+
+build_audit:
+  image: $TEST_IMAGE
+  stage: scan
+  allow_failure: true
+  script:
+    - cargo audit --json > cargo-audit.json
+  artifacts:
+    paths:
+      - cargo-audit.json
+
+badger:
+  image:
+    name: $IMAGE
+    entrypoint: [""]
+  stage: badge
+  script:
+    - security-badger --svg cargo-audit.svg --label 'Cargo Audit' cargo-audit.json
+  artifacts:
+    paths:
+      - cargo-audit.svg
