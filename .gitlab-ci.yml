@@ -11,7 +11,7 @@ variables:
   TEST_IMAGE: $PROJ-test:$CI_COMMIT_REF_NAME
   AXIOM_LATEST: registry.axiom/$PROJ:latest
   AXIOM_TAG: registry.axiom/$PROJ:$CI_COMMIT_TAG
-  RUST_IMAGE: rust:1.86.0-slim-buster
+  RUST_IMAGE: rust:1.86.0-slim
   DOCKER_BUILDKIT: 1
 
 build_image:
