@@ -6,7 +6,7 @@
 //!
 //! TODO Example
 use std::fs::File;
-use std::io::Write;
+use std::io::{Read, Write, Stdin};
 
 use badge_maker::BadgeBuilder;
 use security_badger::cargo_audit;
@@ -45,7 +45,31 @@ struct Args {
     label: String,
 
     /// Path to the audit report as JSON
-    audit_json: String,
+    audit_json: Option<String>,
+}
+
+enum AuditReader {
+    File(File),
+    Stdin(Stdin),
+}
+
+impl Read for AuditReader {
+    fn read(&mut self, buf: &mut [u8]) -> std::io::Result<usize> {
+        match self {
+            Self::File(file) => file.read(buf),
+            Self::Stdin(stdin) => stdin.read(buf),
+        }
+    }
+}
+
+impl Args {
+    fn audit_reader(&self) -> Result<AuditReader, Error> {
+        if let Some(input) = self.audit_json.as_ref() {
+            Ok(AuditReader::File(File::open(input).map_err(Error::Read)?))
+        } else {
+            Ok(AuditReader::Stdin(std::io::stdin()))
+        }
+    }
 }
 
 pub enum Reporting {
@@ -55,8 +79,8 @@ pub enum Reporting {
 
 fn handle_trivy(args: &Args) -> Result<Box<dyn Badge>, Error> {
     let report: Report = {
-        let f = File::open(&args.audit_json).map_err(Error::Read)?;
-        serde_json::from_reader(f).map_err(Error::Json)?
+        let rdr = args.audit_reader()?;
+        serde_json::from_reader(rdr).map_err(Error::Json)?
     };
     let mut builder = VulnerabilitySummaryBuilder::new();
     for filter_status in args.trivy_filter.iter() {
@@ -72,8 +96,8 @@ fn handle_trivy(args: &Args) -> Result<Box<dyn Badge>, Error> {
 
 fn handle_cargo_audit(args: &Args) -> Result<Box<dyn Badge>, Error> {
     let report: cargo_audit::Report = {
-        let f = File::open(&args.audit_json).map_err(Error::Read)?;
-        serde_json::from_reader(f).map_err(Error::Json)?
+        let rdr = args.audit_reader()?;
+        serde_json::from_reader(rdr).map_err(Error::Json)?
     };
     let summary = cargo_audit::VulnerabilitySummary::from(report);
     summary.summarize();
