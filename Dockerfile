@@ -1,4 +1,4 @@
-FROM rust:1.79-slim-buster
+FROM rust:1.86-slim-buster
 
 # Metadata
 LABEL org.opencontainers.image.authors="Luke Campbell <luke@axds.co>"

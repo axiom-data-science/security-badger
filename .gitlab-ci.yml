@@ -11,6 +11,7 @@ variables:
   TEST_IMAGE: $PROJ-test:$CI_COMMIT_REF_NAME
   AXIOM_LATEST: registry.axiom/$PROJ:latest
   AXIOM_TAG: registry.axiom/$PROJ:$CI_COMMIT_TAG
+  RUST_IMAGE: rust:1.86.0-slim-buster
   DOCKER_BUILDKIT: 1
 
 build_image:
@@ -19,14 +20,14 @@ build_image:
     - docker build $BUILDOPTS -t $IMAGE .
 
 clippy:
-  image: rust:1.79.0-slim-buster
+  image: $RUST_IMAGE
   stage: test
   script:
     - rustup component add clippy
     - cargo clippy -- -Dwarnings
 
 test:
-  image: rust:1.79.0-slim-buster
+  image: $RUST_IMAGE
   stage: test
   script:
     - cargo test
@@ -48,10 +49,12 @@ push_tag:
     - docker push $AXIOM_TAG
 
 build_audit:
-  image: $TEST_IMAGE
+  image: $RUST_IMAGE
   stage: scan
   allow_failure: true
   script:
+    - cargo install cargo-audit
+    - cargo build
     - cargo audit --json > cargo-audit.json
   artifacts:
     paths:
