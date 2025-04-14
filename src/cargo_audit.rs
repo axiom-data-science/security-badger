@@ -1,12 +1,132 @@
 use std::fmt::Display;
+use chrono::NaiveDate;
 
 use badge_maker::color::{Color, NamedColor};
 use cvss::v3::Base;
-pub use rustsec::Report;
-use rustsec::Vulnerability;
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 
 use crate::{Badge, Severity, Summarize};
+
+#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
+pub struct Metadata {
+    /// Security advisory ID (e.g. RUSTSEC-YYYY-NNNN)
+    pub id: String,
+
+    /// Name of affected crate
+    pub package: String,
+
+    /// One-liner description of a vulnerability
+    #[serde(default)]
+    pub title: String,
+
+    /// Extended description of a vulnerability
+    #[serde(default)]
+    pub description: String,
+
+    /// NaiveDate the underlying issue was reported
+    pub date: NaiveDate,
+
+    /// Advisory IDs in other databases which point to the same advisory
+    #[serde(default)]
+    pub aliases: Vec<String>,
+
+    /// RustSec vulnerability categories: one of a fixed list of vulnerability
+    /// categorizations accepted by the project.
+    #[serde(default)]
+    pub categories: Vec<String>,
+
+    /// Freeform keywords which succinctly describe this vulnerability (e.g. "ssl", "rce", "xss")
+    #[serde(default)]
+    pub keywords: Vec<String>,
+
+    /// CVSS v3.1 Base Metrics vector string containing severity information.
+    ///
+    /// Example:
+    ///
+    /// ```text
+    /// CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:C/C:L/I:L/A:N
+    /// ```
+    pub cvss: Option<cvss::v3::Base>,
+
+    /// Additional reference URLs with more information related to this advisory
+    #[serde(default)]
+    pub references: Vec<String>,
+
+    /// URL with an announcement (e.g. blog post, PR, disclosure issue, CVE)
+    pub url: Option<String>,
+
+    /// Was this advisory (i.e. itself, regardless of the crate) withdrawn?
+    /// If yes, when?
+    ///
+    /// This can be used to soft-delete advisories which were filed in error.
+    #[serde(default)]
+    pub withdrawn: Option<NaiveDate>,
+
+    /// License under which the advisory content is available
+    #[serde(default)]
+    pub license: String,
+}
+
+#[derive(Clone, Debug, Deserialize, Serialize)]
+pub struct Package {
+    /// Name of the package
+    pub name: String,
+
+    /// Version of the package
+    pub version: String,
+}
+
+#[derive(Clone, Debug, Deserialize, Serialize)]
+pub struct Versions {
+    /// Versions which are patched and not vulnerable (expressed as semantic version requirements)
+    patched: Vec<String>,
+
+    /// Versions which were never affected in the first place
+    #[serde(default)]
+    unaffected: Vec<String>,
+}
+
+impl Versions {
+    fn patched(&self) -> &[String] {
+        self.patched.as_slice()
+    }
+}
+
+#[derive(Clone, Debug, Deserialize, Serialize)]
+pub struct Vulnerability {
+    /// Security advisory for which the package is vulnerable
+    pub advisory: Metadata,
+
+    /// Versions impacted by this vulnerability
+    pub versions: Versions,
+
+    /*
+    /// More specific information about what this advisory affects (if available)
+    pub affected: Option<advisory::Affected>,
+
+    */
+    /// Vulnerable package
+    pub package: Package,
+}
+
+/// Information about detected vulnerabilities
+#[derive(Clone, Debug, Default, Deserialize, Serialize)]
+pub struct VulnerabilityInfo {
+    /// Were any vulnerabilities found?
+    pub found: bool,
+
+    /// Number of vulnerabilities found
+    pub count: usize,
+
+    /// List of detected vulnerabilities
+    pub list: Vec<Vulnerability>,
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone)]
+pub struct Report {
+    /// Vulnerabilities detected in project
+    pub vulnerabilities: VulnerabilityInfo,
+}
 
 #[derive(Debug, Clone, Serialize)]
 pub enum VulnerabilityStatus {
@@ -70,8 +190,8 @@ impl From<cvss::Severity> for Severity {
     }
 }
 
-impl From<&rustsec::Vulnerability> for VulnerabilityOverview {
-    fn from(vuln: &rustsec::Vulnerability) -> Self {
+impl From<&Vulnerability> for VulnerabilityOverview {
+    fn from(vuln: &Vulnerability) -> Self {
         Self {
             package: format!("{}@{}", vuln.package.name, vuln.package.version),
             title: vuln.advisory.title.clone(),
@@ -201,7 +321,11 @@ mod tests {
         let f = File::open("tests/data/cargo-audit-high.json")?;
         let rep: Report = serde_json::from_reader(f)?;
         let summary = VulnerabilitySummary::from(rep);
-        println!("{:#?}", summary);
+        assert_eq!(summary.critical, 0);
+        assert_eq!(summary.high, 1);
+        assert_eq!(summary.medium, 0);
+        assert_eq!(summary.low, 0);
+        assert_eq!(summary.unknown, 0);
 
         Ok(())
     }
