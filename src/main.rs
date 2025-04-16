@@ -6,7 +6,7 @@
 //!
 //! TODO Example
 use std::fs::File;
-use std::io::{Read, Write, Stdin};
+use std::io::{Read, Stdin, Write};
 
 use badge_maker::BadgeBuilder;
 use security_badger::cargo_audit;

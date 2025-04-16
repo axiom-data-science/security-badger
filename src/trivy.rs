@@ -50,7 +50,7 @@ pub struct PackageIdentifier {
 /// DetectedVulnerability struct mapped from trivy
 #[derive(Serialize, Deserialize, Clone, Debug)]
 #[serde(rename_all = "PascalCase")]
-pub struct DebianVulnerability {
+pub struct SystemPackageVulnerability {
     #[serde(rename = "VulnerabilityID")]
     pub vulnerability_id: String,
     #[serde(rename = "PkgID")]
@@ -72,7 +72,7 @@ pub struct DebianVulnerability {
     pub last_modified_date: Option<DateTime<Utc>>,
 }
 
-impl VulnQuery for DebianVulnerability {
+impl VulnQuery for SystemPackageVulnerability {
     fn status(&self) -> Option<&VulnerabilityStatus> {
         self.status.as_ref()
     }
@@ -101,7 +101,16 @@ pub struct DebianResult {
     pub target: String,
     pub class: String,
     #[serde(default)]
-    pub vulnerabilities: Vec<DebianVulnerability>,
+    pub vulnerabilities: Vec<SystemPackageVulnerability>,
+}
+
+#[derive(Serialize, Deserialize, Clone, Debug)]
+#[serde(rename_all = "PascalCase")]
+pub struct AlpineResult {
+    pub target: String,
+    pub class: String,
+    #[serde(default)]
+    pub vulnerabilities: Vec<SystemPackageVulnerability>,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug)]
@@ -152,7 +161,7 @@ pub struct PythonPackageResult {
 #[derive(Clone, Debug)]
 #[enum_dispatch(VulnQuery)]
 pub enum VulnerabilityType {
-    DebianVulnerability(DebianVulnerability),
+    SystemPackageVulnerability(SystemPackageVulnerability),
     PythonVulnerability(PythonVulnerability),
 }
 
@@ -160,11 +169,16 @@ impl From<&Report> for Vec<VulnerabilityType> {
     fn from(report: &Report) -> Self {
         let mut vulnerabilities: Vec<VulnerabilityType> = vec![];
         report.results.iter().for_each(|res| match res {
-            AuditResult::DebianResult(debian_result) => debian_result
-                .vulnerabilities
-                .iter()
-                .cloned()
-                .for_each(|a| vulnerabilities.push(VulnerabilityType::DebianVulnerability(a))),
+            AuditResult::DebianResult(debian_result) => {
+                debian_result.vulnerabilities.iter().cloned().for_each(|a| {
+                    vulnerabilities.push(VulnerabilityType::SystemPackageVulnerability(a))
+                })
+            }
+            AuditResult::AlpineResult(alpine_result) => {
+                alpine_result.vulnerabilities.iter().cloned().for_each(|a| {
+                    vulnerabilities.push(VulnerabilityType::SystemPackageVulnerability(a))
+                })
+            }
             AuditResult::PythonPackageResult(python_package_result) => python_package_result
                 .vulnerabilities
                 .iter()
@@ -180,6 +194,9 @@ impl From<&Report> for Vec<VulnerabilityType> {
 pub enum AuditResult {
     #[serde(rename = "debian")]
     DebianResult(DebianResult),
+
+    #[serde(rename = "alpine")]
+    AlpineResult(AlpineResult),
 
     #[serde(rename = "python-pkg")]
     PythonPackageResult(PythonPackageResult),
@@ -219,7 +236,7 @@ impl VulnerabilitySummaryBuilder {
             .iter()
             .filter(|vuln| {
                 let status = match vuln {
-                    VulnerabilityType::DebianVulnerability(debian_vulnerability) => {
+                    VulnerabilityType::SystemPackageVulnerability(debian_vulnerability) => {
                         debian_vulnerability.status()
                     }
                     VulnerabilityType::PythonVulnerability(python_vulnerability) => {
@@ -414,9 +431,23 @@ pub mod tests {
     }
 
     #[test]
+    fn test_alpine_summary() -> Result<(), Box<dyn std::error::Error>> {
+        let mut f = File::open("tests/data/trivy-report-alpine.json")?;
+        let report: Report = serde_json::from_reader(&mut f)?;
+
+        let summary = VulnerabilitySummary::from(report);
+        assert_eq!(summary.low_severity, 4);
+        assert_eq!(summary.medium_severity, 28);
+        assert_eq!(summary.high_severity, 0);
+        assert_eq!(summary.critical_severity, 0);
+
+        Ok(())
+    }
+
+    #[test]
     fn test_debian_vuln_deserialize() -> Result<(), Box<dyn std::error::Error>> {
         let mut f = File::open("tests/data/debian-vuln.json")?;
-        let debian_vulnerability: DebianVulnerability = serde_json::from_reader(&mut f)?;
+        let debian_vulnerability: SystemPackageVulnerability = serde_json::from_reader(&mut f)?;
         assert_eq!(
             debian_vulnerability.title(),
             "It was found that apt-key in apt, all versions, do not correctly valid ..."

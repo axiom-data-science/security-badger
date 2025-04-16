@@ -1,5 +1,5 @@
-use std::fmt::Display;
 use chrono::NaiveDate;
+use std::fmt::Display;
 
 use badge_maker::color::{Color, NamedColor};
 use cvss::v3::Base;
