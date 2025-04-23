@@ -1,7 +1,3 @@
-![Pipeline Status](http://git.axiom/axiom/security-badger/badges/main/pipeline.svg)
-![Cargo Audit](http://git.axiom/axiom/security-badger/-/jobs/artifacts/main/raw/cargo-audit.svg?job=badger-cargo-audit)
-![Trivy](http://git.axiom/axiom/security-badger/-/jobs/artifacts/main/raw/trivy-audit.svg?job=badger-trivy)
-
 security-badger
 ===============
 
