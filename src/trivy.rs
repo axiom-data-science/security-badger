@@ -203,12 +203,60 @@ pub struct PythonPackageResult {
     pub vulnerabilities: Vec<PythonVulnerability>,
 }
 
+#[derive(Serialize, Deserialize, Clone, Debug)]
+#[serde(rename_all = "PascalCase")]
+pub struct JavaVulnerability {
+    #[serde(rename = "VulnerabilityID")]
+    pub vulnerability_id: String,
+    #[serde(rename = "PkgName")]
+    pub package_name: String,
+    pub status: Option<VulnerabilityStatus>,
+    pub severity: Option<Severity>,
+    pub title: String,
+    pub description: Option<String>,
+}
+
+impl VulnQuery for JavaVulnerability {
+    fn status(&self) -> Option<&VulnerabilityStatus> {
+        self.status.as_ref()
+    }
+
+    fn severity(&self) -> Option<&Severity> {
+        self.severity.as_ref()
+    }
+
+    fn vulnerability_id(&self) -> &str {
+        &self.vulnerability_id
+    }
+
+    fn description(&self) -> Option<&str> {
+        self.description.as_deref()
+    }
+
+    fn title(&self) -> &str {
+        &self.title
+    }
+}
+
+#[derive(Serialize, Deserialize, Clone, Debug)]
+#[serde(rename_all = "PascalCase")]
+pub struct JavaJarResult {
+    pub target: String,
+    pub class: String,
+    #[serde(rename = "Type")]
+    pub package_type: String,
+
+    #[serde(default)]
+    pub vulnerabilities: Vec<JavaVulnerability>,
+}
+
 #[derive(Clone, Debug)]
 #[enum_dispatch(VulnQuery)]
 pub enum VulnerabilityType {
     SystemPackageVulnerability(SystemPackageVulnerability),
     PythonVulnerability(PythonVulnerability),
     SecretScanVulnerability(SecretScanVulnerability),
+    JavaVulnerability(JavaVulnerability),
 }
 
 impl From<&Report> for Vec<VulnerabilityType> {
@@ -230,6 +278,11 @@ impl From<&Report> for Vec<VulnerabilityType> {
                 .iter()
                 .cloned()
                 .for_each(|a| vulnerabilities.push(VulnerabilityType::PythonVulnerability(a))),
+            AuditResult::JavaJarResult(java_jar_result) => java_jar_result
+                .vulnerabilities
+                .iter()
+                .cloned()
+                .for_each(|a| vulnerabilities.push(VulnerabilityType::JavaVulnerability(a))),
             AuditResult::SecretScanResult(secret_scan_result) => {
                 secret_scan_result.secrets.iter().cloned().for_each(|a| {
                     vulnerabilities.push(VulnerabilityType::SecretScanVulnerability(a))
@@ -253,6 +306,9 @@ pub enum AuditResult {
 
     #[serde(rename = "secret")]
     SecretScanResult(SecretScanResult),
+
+    #[serde(rename = "jar")]
+    JavaJarResult(JavaJarResult),
 }
 
 impl<'de> Deserialize<'de> for AuditResult {
@@ -274,6 +330,11 @@ impl<'de> Deserialize<'de> for AuditResult {
                         .map(AuditResult::DebianResult)
                         .map_err(serde::de::Error::custom);
                 }
+                "ubuntu" => {
+                    return DebianResult::deserialize(value)
+                        .map(AuditResult::DebianResult)
+                        .map_err(serde::de::Error::custom);
+                }
                 "alpine" => {
                     return AlpineResult::deserialize(value)
                         .map(AuditResult::AlpineResult)
@@ -282,6 +343,11 @@ impl<'de> Deserialize<'de> for AuditResult {
                 "python-pkg" => {
                     return PythonPackageResult::deserialize(value)
                         .map(AuditResult::PythonPackageResult)
+                        .map_err(serde::de::Error::custom);
+                }
+                "jar" => {
+                    return JavaJarResult::deserialize(value)
+                        .map(AuditResult::JavaJarResult)
                         .map_err(serde::de::Error::custom);
                 }
                 _ => {}
@@ -344,6 +410,9 @@ impl VulnerabilitySummaryBuilder {
                     }
                     VulnerabilityType::SecretScanVulnerability(secret_scan_vuln) => {
                         secret_scan_vuln.status()
+                    }
+                    VulnerabilityType::JavaVulnerability(java_vulnerability) => {
+                        java_vulnerability.status()
                     }
                 };
                 if let Some(status) = status {
@@ -471,6 +540,8 @@ impl Summarize for VulnerabilitySummary {
 
 #[cfg(test)]
 pub mod tests {
+    use flate2::read::GzDecoder;
+
     use super::*;
     use std::fs::File;
     #[test]
@@ -621,6 +692,20 @@ pub mod tests {
         assert_eq!(summary.medium_severity, 0);
         assert_eq!(summary.high_severity, 0);
         assert_eq!(summary.critical_severity, 0);
+
+        Ok(())
+    }
+
+    #[test]
+    fn test_geoserver() -> Result<(), Box<dyn std::error::Error>> {
+        let f = File::open("tests/data/geoserver-2.28.x.trivy.json.gz")?;
+        let mut reader = GzDecoder::new(f);
+        let report: Report = serde_json::from_reader(&mut reader)?;
+        let summary = VulnerabilitySummaryBuilder::new().build(&report);
+        assert_eq!(summary.low_severity, 33);
+        assert_eq!(summary.medium_severity, 76);
+        assert_eq!(summary.high_severity, 4);
+        assert_eq!(summary.critical_severity, 3);
 
         Ok(())
     }
