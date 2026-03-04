@@ -1,0 +1,519 @@
+{
+  "SchemaVersion": 2,
+  "CreatedAt": "2025-08-25T15:05:22.475968442Z",
+  "ArtifactName": "woodchuck:wip-project-updates",
+  "ArtifactType": "container_image",
+  "Metadata": {
+    "Size": 1265570304,
+    "OS": {
+      "Family": "debian",
+      "Name": "12.11"
+    },
+    "ImageID": "sha256:ecadb78409e273addd7bb4618ca2031021a15268989b9a8662ac31c6125b3e87",
+    "DiffIDs": [
+      "sha256:7cc7fe68eff66f19872441a51938eecc4ad33746d2baa3abc081c1e6fe25988e",
+      "sha256:dfc28370d82682f3cc22eeda223fba9476328072fe451e479b10f090210a3543",
+      "sha256:81077d99e523d9d2d720fba33ba0d1eae878986cd3e285e726d664e547f3b76a",
+      "sha256:6989a4bbb732a124ecc9104ecb7042b4741096c0dabfeed6cd465cfb1c6b47ef",
+      "sha256:5b2b34055848a1fdbdc3a4b16835e84a7871413d3c0f802371cfa162fd008fd1",
+      "sha256:0b7de1fe8c9f2f39a0084b7bd3c147fb113e3a271cac22b8ae45409c3efe57a5",
+      "sha256:5f70bf18a086007016e948b04aed3b82103a36bea41755b6cddfaf10ace3c6ef",
+      "sha256:a998acbd9499d86433f943699754dd745dbd3debd34d73ded4ebb831c7f1617a",
+      "sha256:a0fb4a57f46d5d0109565e3fb5d55c5ac351affb9e01433460824f85063bd5dc",
+      "sha256:6d827acfb4641000efc747c5c3204be814524b2ad72a3f45424085a582664d45",
+      "sha256:8f8a9939fba59786c93c0ef93f72b947e86eafd2ced1b2eec2d5558a5dc58cb6",
+      "sha256:a4d3148779c9631e708115934f18f816d4ffc05818c3a5cbf920753bb87a9569",
+      "sha256:ba20ea66dab22a27bc5e1280ccfb0d5bdebc830550c83509168687cb5ad488cf",
+      "sha256:778e846616525bfb4e3394846319de712a91d571e3853996fa22af415abca3e4",
+      "sha256:ca2d4a5926ab7581643b880708b523c969ab3964a631dcf59656bb6702ae6cab",
+      "sha256:5f70bf18a086007016e948b04aed3b82103a36bea41755b6cddfaf10ace3c6ef",
+      "sha256:ed3dfb68b4ac77bea92cc24e083fce243cf7372e42d2fab40240232924cc5d28"
+    ],
+    "RepoTags": [
+      "woodchuck:wip-project-updates"
+    ],
+    "ImageConfig": {
+      "architecture": "amd64",
+      "created": "2025-08-25T08:02:42.377569303-07:00",
+      "history": [
+        {
+          "created": "2025-07-21T00:00:00Z",
+          "created_by": "# debian.sh --arch 'amd64' out/ 'bookworm' '@1753056000'",
+          "comment": "debuerreotype 0.15"
+        },
+        {
+          "created": "2025-07-28T20:49:17Z",
+          "created_by": "ARG CERT_SOURCE=/etc/ssl/certs/ca-certificates.crt",
+          "comment": "buildkit.dockerfile.v0",
+          "empty_layer": true
+        },
+        {
+          "created": "2025-07-28T20:49:17Z",
+          "created_by": "ARG MAMBA_USER=mambauser",
+          "comment": "buildkit.dockerfile.v0",
+          "empty_layer": true
+        },
+        {
+          "created": "2025-07-28T20:49:17Z",
+          "created_by": "ARG MAMBA_USER_ID=57439",
+          "comment": "buildkit.dockerfile.v0",
+          "empty_layer": true
+        },
+        {
+          "created": "2025-07-28T20:49:17Z",
+          "created_by": "ARG MAMBA_USER_GID=57439",
+          "comment": "buildkit.dockerfile.v0",
+          "empty_layer": true
+        },
+        {
+          "created": "2025-07-28T20:49:17Z",
+          "created_by": "ENV MAMBA_USER=mambauser",
+          "comment": "buildkit.dockerfile.v0",
+          "empty_layer": true
+        },
+        {
+          "created": "2025-07-28T20:49:17Z",
+          "created_by": "ENV MAMBA_USER_ID=57439",
+          "comment": "buildkit.dockerfile.v0",
+          "empty_layer": true
+        },
+        {
+          "created": "2025-07-28T20:49:17Z",
+          "created_by": "ENV MAMBA_USER_GID=57439",
+          "comment": "buildkit.dockerfile.v0",
+          "empty_layer": true
+        },
+        {
+          "created": "2025-07-28T20:49:17Z",
+          "created_by": "ENV LANG=C.UTF-8 LC_ALL=C.UTF-8",
+          "comment": "buildkit.dockerfile.v0",
+          "empty_layer": true
+        },
+        {
+          "created": "2025-07-28T20:49:17Z",
+          "created_by": "ENV ENV_NAME=base",
+          "comment": "buildkit.dockerfile.v0",
+          "empty_layer": true
+        },
+        {
+          "created": "2025-07-28T20:49:17Z",
+          "created_by": "ENV MAMBA_ROOT_PREFIX=/opt/conda",
+          "comment": "buildkit.dockerfile.v0",
+          "empty_layer": true
+        },
+        {
+          "created": "2025-07-28T20:49:17Z",
+          "created_by": "ENV MAMBA_EXE=/bin/micromamba",
+          "comment": "buildkit.dockerfile.v0",
+          "empty_layer": true
+        },
+        {
+          "created": "2025-07-28T20:49:17Z",
+          "created_by": "ENV CONDA_OVERRIDE_CUDA=",
+          "comment": "buildkit.dockerfile.v0",
+          "empty_layer": true
+        },
+        {
+          "created": "2025-07-28T20:49:17Z",
+          "created_by": "COPY /bin/micromamba /bin/micromamba # buildkit",
+          "comment": "buildkit.dockerfile.v0"
+        },
+        {
+          "created": "2025-07-28T20:49:18Z",
+          "created_by": "COPY /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/ca-certificates.crt # buildkit",
+          "comment": "buildkit.dockerfile.v0"
+        },
+        {
+          "created": "2025-07-28T20:49:18Z",
+          "created_by": "COPY _dockerfile_initialize_user_accounts.sh /usr/local/bin/_dockerfile_initialize_user_accounts.sh # buildkit",
+          "comment": "buildkit.dockerfile.v0"
+        },
+        {
+          "created": "2025-07-28T20:49:18Z",
+          "created_by": "COPY _dockerfile_setup_root_prefix.sh /usr/local/bin/_dockerfile_setup_root_prefix.sh # buildkit",
+          "comment": "buildkit.dockerfile.v0"
+        },
+        {
+          "created": "2025-07-28T20:49:18Z",
+          "created_by": "RUN |4 CERT_SOURCE=/etc/ssl/certs/ca-certificates.crt MAMBA_USER=mambauser MAMBA_USER_ID=57439 MAMBA_USER_GID=57439 /bin/sh -c /usr/local/bin/_dockerfile_initialize_user_accounts.sh     \u0026\u0026 /usr/local/bin/_dockerfile_setup_root_prefix.sh # buildkit",
+          "comment": "buildkit.dockerfile.v0"
+        },
+        {
+          "created": "2025-07-28T20:49:18Z",
+          "created_by": "USER mambauser",
+          "comment": "buildkit.dockerfile.v0",
+          "empty_layer": true
+        },
+        {
+          "created": "2025-07-28T20:49:18Z",
+          "created_by": "WORKDIR /tmp",
+          "comment": "buildkit.dockerfile.v0"
+        },
+        {
+          "created": "2025-07-28T20:49:18Z",
+          "created_by": "COPY _entrypoint.sh /usr/local/bin/_entrypoint.sh # buildkit",
+          "comment": "buildkit.dockerfile.v0"
+        },
+        {
+          "created": "2025-07-28T20:49:18Z",
+          "created_by": "COPY _activate_current_env.sh /usr/local/bin/_activate_current_env.sh # buildkit",
+          "comment": "buildkit.dockerfile.v0"
+        },
+        {
+          "created": "2025-07-28T20:49:18Z",
+          "created_by": "ENTRYPOINT [\"/usr/local/bin/_entrypoint.sh\"]",
+          "comment": "buildkit.dockerfile.v0",
+          "empty_layer": true
+        },
+        {
+          "created": "2025-07-28T20:49:18Z",
+          "created_by": "CMD [\"/bin/bash\"]",
+          "comment": "buildkit.dockerfile.v0",
+          "empty_layer": true
+        },
+        {
+          "created": "2025-07-28T20:49:18Z",
+          "created_by": "COPY _dockerfile_shell.sh /usr/local/bin/_dockerfile_shell.sh # buildkit",
+          "comment": "buildkit.dockerfile.v0"
+        },
+        {
+          "created": "2025-07-28T20:49:18Z",
+          "created_by": "SHELL [/usr/local/bin/_dockerfile_shell.sh]",
+          "comment": "buildkit.dockerfile.v0",
+          "empty_layer": true
+        },
+        {
+          "created": "2025-08-25T14:48:05Z",
+          "created_by": "LABEL org.opencontainers.image.authors=Luke Campbell \u003cluke@axds.co\u003e",
+          "comment": "buildkit.dockerfile.v0",
+          "empty_layer": true
+        },
+        {
+          "created": "2025-08-25T14:48:05Z",
+          "created_by": "LABEL org.opencontainers.image.url=https://git.axiom/axiom/woodchuck/",
+          "comment": "buildkit.dockerfile.v0",
+          "empty_layer": true
+        },
+        {
+          "created": "2025-08-25T14:48:05Z",
+          "created_by": "LABEL org.opencontainers.image.source=https://git.axiom/axiom/woodchuck/",
+          "comment": "buildkit.dockerfile.v0",
+          "empty_layer": true
+        },
+        {
+          "created": "2025-08-25T14:48:05Z",
+          "created_by": "LABEL org.opencontainers.image.licenses=MIT",
+          "comment": "buildkit.dockerfile.v0",
+          "empty_layer": true
+        },
+        {
+          "created": "2025-08-25T14:48:05Z",
+          "created_by": "ENV PROJECT_NAME=woodchuck",
+          "comment": "buildkit.dockerfile.v0",
+          "empty_layer": true
+        },
+        {
+          "created": "2025-08-25T14:48:05Z",
+          "created_by": "ENV PROJECT_ROOT=/opt/woodchuck",
+          "comment": "buildkit.dockerfile.v0",
+          "empty_layer": true
+        },
+        {
+          "created": "2025-08-25T14:48:05Z",
+          "created_by": "COPY --chown=mambauser:mambauser environment.yml /tmp/environment.yml # buildkit",
+          "comment": "buildkit.dockerfile.v0"
+        },
+        {
+          "created": "2025-08-25T14:49:08Z",
+          "created_by": "RUN /usr/local/bin/_dockerfile_shell.sh micromamba install -y -n base -f /tmp/environment.yml \u0026\u0026     micromamba clean --all --yes \u0026\u0026     rm /tmp/environment.yml # buildkit",
+          "comment": "buildkit.dockerfile.v0"
+        },
+        {
+          "created": "2025-08-25T14:49:08Z",
+          "created_by": "COPY --chown=mambauser:mambauser woodchuck /opt/woodchuck/woodchuck # buildkit",
+          "comment": "buildkit.dockerfile.v0"
+        },
+        {
+          "created": "2025-08-25T14:49:08Z",
+          "created_by": "COPY --chown=mambauser:mambauser tests /opt/woodchuck/tests # buildkit",
+          "comment": "buildkit.dockerfile.v0"
+        },
+        {
+          "created": "2025-08-25T15:02:37Z",
+          "created_by": "COPY --chown=mambauser:mambauser pyproject.toml MANIFEST.in conftest.py README.md LICENSE HISTORY.rst /opt/woodchuck/ # buildkit",
+          "comment": "buildkit.dockerfile.v0"
+        },
+        {
+          "created": "2025-08-25T15:02:38Z",
+          "created_by": "WORKDIR /opt/woodchuck/",
+          "comment": "buildkit.dockerfile.v0"
+        },
+        {
+          "created": "2025-08-25T15:02:42Z",
+          "created_by": "RUN /usr/local/bin/_dockerfile_shell.sh /opt/conda/bin/pip install . # buildkit",
+          "comment": "buildkit.dockerfile.v0"
+        }
+      ],
+      "os": "linux",
+      "rootfs": {
+        "type": "layers",
+        "diff_ids": [
+          "sha256:7cc7fe68eff66f19872441a51938eecc4ad33746d2baa3abc081c1e6fe25988e",
+          "sha256:dfc28370d82682f3cc22eeda223fba9476328072fe451e479b10f090210a3543",
+          "sha256:81077d99e523d9d2d720fba33ba0d1eae878986cd3e285e726d664e547f3b76a",
+          "sha256:6989a4bbb732a124ecc9104ecb7042b4741096c0dabfeed6cd465cfb1c6b47ef",
+          "sha256:5b2b34055848a1fdbdc3a4b16835e84a7871413d3c0f802371cfa162fd008fd1",
+          "sha256:0b7de1fe8c9f2f39a0084b7bd3c147fb113e3a271cac22b8ae45409c3efe57a5",
+          "sha256:5f70bf18a086007016e948b04aed3b82103a36bea41755b6cddfaf10ace3c6ef",
+          "sha256:a998acbd9499d86433f943699754dd745dbd3debd34d73ded4ebb831c7f1617a",
+          "sha256:a0fb4a57f46d5d0109565e3fb5d55c5ac351affb9e01433460824f85063bd5dc",
+          "sha256:6d827acfb4641000efc747c5c3204be814524b2ad72a3f45424085a582664d45",
+          "sha256:8f8a9939fba59786c93c0ef93f72b947e86eafd2ced1b2eec2d5558a5dc58cb6",
+          "sha256:a4d3148779c9631e708115934f18f816d4ffc05818c3a5cbf920753bb87a9569",
+          "sha256:ba20ea66dab22a27bc5e1280ccfb0d5bdebc830550c83509168687cb5ad488cf",
+          "sha256:778e846616525bfb4e3394846319de712a91d571e3853996fa22af415abca3e4",
+          "sha256:ca2d4a5926ab7581643b880708b523c969ab3964a631dcf59656bb6702ae6cab",
+          "sha256:5f70bf18a086007016e948b04aed3b82103a36bea41755b6cddfaf10ace3c6ef",
+          "sha256:ed3dfb68b4ac77bea92cc24e083fce243cf7372e42d2fab40240232924cc5d28"
+        ]
+      },
+      "config": {
+        "Cmd": [
+          "/bin/bash"
+        ],
+        "Entrypoint": [
+          "/usr/local/bin/_entrypoint.sh"
+        ],
+        "Env": [
+          "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+          "MAMBA_USER=mambauser",
+          "MAMBA_USER_ID=57439",
+          "MAMBA_USER_GID=57439",
+          "LANG=C.UTF-8",
+          "LC_ALL=C.UTF-8",
+          "ENV_NAME=base",
+          "MAMBA_ROOT_PREFIX=/opt/conda",
+          "MAMBA_EXE=/bin/micromamba",
+          "CONDA_OVERRIDE_CUDA=",
+          "PROJECT_NAME=woodchuck",
+          "PROJECT_ROOT=/opt/woodchuck"
+        ],
+        "Labels": {
+          "distro_id": "debian",
+          "org.opencontainers.image.authors": "Luke Campbell \u003cluke@axds.co\u003e",
+          "org.opencontainers.image.created": "2025-07-28T20:48:47.218Z",
+          "org.opencontainers.image.description": "Rapid builds of small Conda-based containers using micromamba.",
+          "org.opencontainers.image.licenses": "MIT",
+          "org.opencontainers.image.revision": "60cbdadd7d8b55f83bc5817ea06f16efa78c88c2",
+          "org.opencontainers.image.source": "https://git.axiom/axiom/woodchuck/",
+          "org.opencontainers.image.title": "micromamba-docker",
+          "org.opencontainers.image.url": "https://git.axiom/axiom/woodchuck/",
+          "org.opencontainers.image.version": "latest"
+        },
+        "User": "mambauser",
+        "WorkingDir": "/opt/woodchuck/",
+        "ArgsEscaped": true,
+        "Shell": [
+          "/usr/local/bin/_dockerfile_shell.sh"
+        ]
+      }
+    },
+    "Layers": [
+      {
+        "Size": 77875200,
+        "DiffID": "sha256:7cc7fe68eff66f19872441a51938eecc4ad33746d2baa3abc081c1e6fe25988e"
+      },
+      {
+        "Size": 17020416,
+        "DiffID": "sha256:dfc28370d82682f3cc22eeda223fba9476328072fe451e479b10f090210a3543"
+      },
+      {
+        "Size": 220160,
+        "DiffID": "sha256:81077d99e523d9d2d720fba33ba0d1eae878986cd3e285e726d664e547f3b76a"
+      },
+      {
+        "Size": 4096,
+        "DiffID": "sha256:6989a4bbb732a124ecc9104ecb7042b4741096c0dabfeed6cd465cfb1c6b47ef"
+      },
+      {
+        "Size": 3584,
+        "DiffID": "sha256:5b2b34055848a1fdbdc3a4b16835e84a7871413d3c0f802371cfa162fd008fd1"
+      },
+      {
+        "Size": 30720,
+        "DiffID": "sha256:0b7de1fe8c9f2f39a0084b7bd3c147fb113e3a271cac22b8ae45409c3efe57a5"
+      },
+      {
+        "Size": 1024,
+        "DiffID": "sha256:5f70bf18a086007016e948b04aed3b82103a36bea41755b6cddfaf10ace3c6ef"
+      },
+      {
+        "Size": 4096,
+        "DiffID": "sha256:a998acbd9499d86433f943699754dd745dbd3debd34d73ded4ebb831c7f1617a"
+      },
+      {
+        "Size": 4608,
+        "DiffID": "sha256:a0fb4a57f46d5d0109565e3fb5d55c5ac351affb9e01433460824f85063bd5dc"
+      },
+      {
+        "Size": 3584,
+        "DiffID": "sha256:6d827acfb4641000efc747c5c3204be814524b2ad72a3f45424085a582664d45"
+      },
+      {
+        "Size": 2560,
+        "DiffID": "sha256:8f8a9939fba59786c93c0ef93f72b947e86eafd2ced1b2eec2d5558a5dc58cb6"
+      },
+      {
+        "Size": 1169854464,
+        "DiffID": "sha256:a4d3148779c9631e708115934f18f816d4ffc05818c3a5cbf920753bb87a9569"
+      },
+      {
+        "Size": 53760,
+        "DiffID": "sha256:ba20ea66dab22a27bc5e1280ccfb0d5bdebc830550c83509168687cb5ad488cf"
+      },
+      {
+        "Size": 11776,
+        "DiffID": "sha256:778e846616525bfb4e3394846319de712a91d571e3853996fa22af415abca3e4"
+      },
+      {
+        "Size": 13824,
+        "DiffID": "sha256:ca2d4a5926ab7581643b880708b523c969ab3964a631dcf59656bb6702ae6cab"
+      },
+      {
+        "Size": 1024,
+        "DiffID": "sha256:5f70bf18a086007016e948b04aed3b82103a36bea41755b6cddfaf10ace3c6ef"
+      },
+      {
+        "Size": 465408,
+        "DiffID": "sha256:ed3dfb68b4ac77bea92cc24e083fce243cf7372e42d2fab40240232924cc5d28"
+      }
+    ]
+  },
+  "Results": [
+    {
+      "Target": "woodchuck:wip-project-updates (debian 12.11)",
+      "Class": "os-pkgs",
+      "Type": "debian",
+      "Vulnerabilities": [
+        {
+          "VulnerabilityID": "CVE-2011-3374",
+          "PkgID": "apt@2.6.1",
+          "PkgName": "apt",
+          "PkgIdentifier": {
+            "PURL": "pkg:deb/debian/apt@2.6.1?arch=amd64\u0026distro=debian-12.11",
+            "UID": "f730af9a88fb6c87"
+          },
+          "InstalledVersion": "2.6.1",
+          "Status": "affected",
+          "Layer": {
+            "DiffID": "sha256:7cc7fe68eff66f19872441a51938eecc4ad33746d2baa3abc081c1e6fe25988e"
+          },
+          "SeveritySource": "debian",
+          "PrimaryURL": "https://avd.aquasec.com/nvd/cve-2011-3374",
+          "DataSource": {
+            "ID": "debian",
+            "Name": "Debian Security Tracker",
+            "URL": "https://salsa.debian.org/security-tracker-team/security-tracker"
+          },
+          "Title": "It was found that apt-key in apt, all versions, do not correctly valid ...",
+          "Description": "It was found that apt-key in apt, all versions, do not correctly validate gpg keys with the master keyring, leading to a potential man-in-the-middle attack.",
+          "Severity": "LOW",
+          "CweIDs": [
+            "CWE-347"
+          ],
+          "VendorSeverity": {
+            "debian": 1,
+            "nvd": 1
+          },
+          "CVSS": {
+            "nvd": {
+              "V2Vector": "AV:N/AC:M/Au:N/C:N/I:P/A:N",
+              "V3Vector": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:N/I:L/A:N",
+              "V2Score": 4.3,
+              "V3Score": 3.7
+            }
+          },
+          "References": [
+            "https://access.redhat.com/security/cve/cve-2011-3374",
+            "https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=642480",
+            "https://people.canonical.com/~ubuntu-security/cve/2011/CVE-2011-3374.html",
+            "https://seclists.org/fulldisclosure/2011/Sep/221",
+            "https://security-tracker.debian.org/tracker/CVE-2011-3374",
+            "https://snyk.io/vuln/SNYK-LINUX-APT-116518",
+            "https://ubuntu.com/security/CVE-2011-3374"
+          ],
+          "PublishedDate": "2019-11-26T00:15:11.03Z",
+          "LastModifiedDate": "2024-11-21T01:30:22.61Z"
+        }
+      ]
+    },
+    {
+      "Target": "Python",
+      "Class": "lang-pkgs",
+      "Type": "python-pkg"
+    },
+    {
+      "Target": "/home/mambauser/.cache/pip/http-v2/e/b/5/4/a/eb54ad8098bbce2484999b06578a3689563ea077088029e738ccebf4.body",
+      "Class": "secret",
+      "Secrets": [
+        {
+          "RuleID": "jwt-token",
+          "Category": "JWT",
+          "Severity": "MEDIUM",
+          "Title": "JWT token",
+          "StartLine": 89,
+          "EndLine": 89,
+          "Code": {
+            "Lines": [
+              {
+                "Number": 87,
+                "Content": "    \u003e\u003e\u003e encoded = jwt.encode({\"some\": \"payload\"}, \"secret\", algorithm=\"HS256\")",
+                "IsCause": false,
+                "Annotation": "",
+                "Truncated": false,
+                "Highlighted": "    \u003e\u003e\u003e encoded = jwt.encode({\"some\": \"payload\"}, \"secret\", algorithm=\"HS256\")",
+                "FirstCause": false,
+                "LastCause": false
+              },
+              {
+                "Number": 88,
+                "Content": "    \u003e\u003e\u003e print(encoded)",
+                "IsCause": false,
+                "Annotation": "",
+                "Truncated": false,
+                "Highlighted": "    \u003e\u003e\u003e print(encoded)",
+                "FirstCause": false,
+                "LastCause": false
+              },
+              {
+                "Number": 89,
+                "Content": "    *********************************************************************************************************",
+                "IsCause": true,
+                "Annotation": "",
+                "Truncated": false,
+                "Highlighted": "    *********************************************************************************************************",
+                "FirstCause": true,
+                "LastCause": true
+              },
+              {
+                "Number": 90,
+                "Content": "    \u003e\u003e\u003e jwt.decode(encoded, \"secret\", algorithms=[\"HS256\"])",
+                "IsCause": false,
+                "Annotation": "",
+                "Truncated": false,
+                "Highlighted": "    \u003e\u003e\u003e jwt.decode(encoded, \"secret\", algorithms=[\"HS256\"])",
+                "FirstCause": false,
+                "LastCause": false
+              }
+            ]
+          },
+          "Match": "    *********************************************************************************************************",
+          "Layer": {
+            "DiffID": "sha256:a4d3148779c9631e708115934f18f816d4ffc05818c3a5cbf920753bb87a9569",
+            "CreatedBy": "RUN /usr/local/bin/_dockerfile_shell.sh micromamba install -y -n base -f /tmp/environment.yml \u0026\u0026     micromamba clean --all --yes \u0026\u0026     rm /tmp/environment.yml # buildkit"
+          }
+        }
+      ]
+    }
+  ]
+}

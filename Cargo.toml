@@ -1,6 +1,6 @@
 [package]
 name = "security-badger"
-version = "0.3.0"
+version = "0.5.0"
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
@@ -19,3 +19,6 @@ simple_logger = "5.0.0"
 strum = "0.27.1"
 strum_macros = "0.27.1"
 thiserror = "2.0.12"
+
+[dev-dependencies]
+flate2 = "1.1.5"

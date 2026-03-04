@@ -1,10 +1,22 @@
+pub mod alpine;
+pub use alpine::AlpineResult;
+pub mod debian;
+pub use debian::DebianResult;
+pub mod java;
+pub use java::{JavaJarResult, JavaVulnerability};
+pub mod python;
+pub use python::{PythonPackageResult, PythonVulnerability};
+pub mod secret_scan;
+pub use secret_scan::{SecretScanResult, SecretScanVulnerability};
+
 use std::fmt::Display;
 
 use badge_maker::color::{Color, NamedColor};
 use chrono::{DateTime, Utc};
 use convert_case::{Case, Casing};
 use enum_dispatch::enum_dispatch;
-use serde::{Deserialize, Serialize};
+use serde::{Deserialize, Deserializer, Serialize};
+use serde_json::Value;
 use strum_macros::{AsRefStr, VariantNames};
 
 use crate::{Badge, Severity, Summarize};
@@ -37,6 +49,7 @@ pub trait VulnQuery {
     fn vulnerability_id(&self) -> &str;
     fn title(&self) -> &str;
     fn description(&self) -> Option<&str>;
+    fn package(&self) -> Option<&str>;
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug)]
@@ -92,77 +105,22 @@ impl VulnQuery for SystemPackageVulnerability {
     fn title(&self) -> &str {
         &self.title
     }
-}
 
-/// Result struct mapped from trivy
-#[derive(Serialize, Deserialize, Clone, Debug)]
-#[serde(rename_all = "PascalCase")]
-pub struct DebianResult {
-    pub target: String,
-    pub class: String,
-    #[serde(default)]
-    pub vulnerabilities: Vec<SystemPackageVulnerability>,
-}
-
-#[derive(Serialize, Deserialize, Clone, Debug)]
-#[serde(rename_all = "PascalCase")]
-pub struct AlpineResult {
-    pub target: String,
-    pub class: String,
-    #[serde(default)]
-    pub vulnerabilities: Vec<SystemPackageVulnerability>,
-}
-
-#[derive(Serialize, Deserialize, Clone, Debug)]
-#[serde(rename_all = "PascalCase")]
-pub struct PythonVulnerability {
-    #[serde(rename = "VulnerabilityID")]
-    pub vulnerability_id: String,
-    #[serde(rename = "PkgName")]
-    pub package_name: String,
-    pub status: Option<VulnerabilityStatus>,
-    pub severity: Option<Severity>,
-    pub title: String,
-    pub description: Option<String>,
-}
-
-impl VulnQuery for PythonVulnerability {
-    fn status(&self) -> Option<&VulnerabilityStatus> {
-        self.status.as_ref()
-    }
-
-    fn severity(&self) -> Option<&Severity> {
-        self.severity.as_ref()
-    }
-
-    fn vulnerability_id(&self) -> &str {
-        &self.vulnerability_id
-    }
-
-    fn description(&self) -> Option<&str> {
-        self.description.as_deref()
-    }
-
-    fn title(&self) -> &str {
-        &self.title
+    fn package(&self) -> Option<&str> {
+        Some(&self.pkg_id)
     }
 }
 
-#[derive(Serialize, Deserialize, Clone, Debug)]
-#[serde(rename_all = "PascalCase")]
-pub struct PythonPackageResult {
-    pub target: String,
-    pub class: String,
 
-    #[serde(default)]
-    pub vulnerabilities: Vec<PythonVulnerability>,
-}
+
 
 #[derive(Clone, Debug)]
 #[enum_dispatch(VulnQuery)]
 pub enum VulnerabilityType {
     SystemPackageVulnerability(SystemPackageVulnerability),
     PythonVulnerability(PythonVulnerability),
+    SecretScanVulnerability(SecretScanVulnerability),
+    JavaVulnerability(JavaVulnerability),
 }
 
 impl From<&Report> for Vec<VulnerabilityType> {
@@ -184,13 +142,22 @@ impl From<&Report> for Vec<VulnerabilityType> {
                 .iter()
                 .cloned()
                 .for_each(|a| vulnerabilities.push(VulnerabilityType::PythonVulnerability(a))),
+            AuditResult::JavaJarResult(java_jar_result) => java_jar_result
+                .vulnerabilities
+                .iter()
+                .cloned()
+                .for_each(|a| vulnerabilities.push(VulnerabilityType::JavaVulnerability(a))),
+            AuditResult::SecretScanResult(secret_scan_result) => {
+                secret_scan_result.secrets.iter().cloned().for_each(|a| {
+                    vulnerabilities.push(VulnerabilityType::SecretScanVulnerability(a))
+                })
+            }
         });
         vulnerabilities
     }
 }
 
-#[derive(Serialize, Deserialize, Clone, Debug)]
-#[serde(tag = "Type")]
+#[derive(Serialize, Clone, Debug)]
 pub enum AuditResult {
     #[serde(rename = "debian")]
     DebianResult(DebianResult),
@@ -200,6 +167,69 @@ pub enum AuditResult {
 
     #[serde(rename = "python-pkg")]
     PythonPackageResult(PythonPackageResult),
+
+    #[serde(rename = "secret")]
+    SecretScanResult(SecretScanResult),
+
+    #[serde(rename = "jar")]
+    JavaJarResult(JavaJarResult),
+}
+
+impl<'de> Deserialize<'de> for AuditResult {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        // Deserialize into a generic JSON Value first to inspect the structure
+        let value = Value::deserialize(deserializer)?;
+
+        let obj = value
+            .as_object()
+            .ok_or_else(|| serde::de::Error::custom("Expected object for AuditResult"))?;
+
+        if let Some(type_field) = obj.get("Type").and_then(|v| v.as_str()) {
+            match type_field {
+                "debian" => {
+                    return DebianResult::deserialize(value)
+                        .map(AuditResult::DebianResult)
+                        .map_err(serde::de::Error::custom);
+                }
+                "ubuntu" => {
+                    return DebianResult::deserialize(value)
+                        .map(AuditResult::DebianResult)
+                        .map_err(serde::de::Error::custom);
+                }
+                "alpine" => {
+                    return AlpineResult::deserialize(value)
+                        .map(AuditResult::AlpineResult)
+                        .map_err(serde::de::Error::custom);
+                }
+                "python-pkg" => {
+                    return PythonPackageResult::deserialize(value)
+                        .map(AuditResult::PythonPackageResult)
+                        .map_err(serde::de::Error::custom);
+                }
+                "jar" => {
+                    return JavaJarResult::deserialize(value)
+                        .map(AuditResult::JavaJarResult)
+                        .map_err(serde::de::Error::custom);
+                }
+                _ => {}
+            }
+        }
+
+        if let Some(class_field) = obj.get("Class").and_then(|v| v.as_str()) {
+            if class_field == "secret" {
+                return SecretScanResult::deserialize(value)
+                    .map(AuditResult::SecretScanResult)
+                    .map_err(serde::de::Error::custom);
+            }
+        }
+
+        Err(serde::de::Error::custom(
+            "Unable to determine AuditResult variable from JSON structure",
+        ))
+    }
 }
 
 /// Report struct mapped from trivy/pkg/types/report.go
@@ -210,6 +240,7 @@ pub struct Report {
     pub schema_version: i32,
     pub artifact_type: String,
 
+    #[serde(default)]
     pub results: Vec<AuditResult>,
 }
 
@@ -241,6 +272,12 @@ impl VulnerabilitySummaryBuilder {
                     }
                     VulnerabilityType::PythonVulnerability(python_vulnerability) => {
                         python_vulnerability.status()
+                    }
+                    VulnerabilityType::SecretScanVulnerability(secret_scan_vuln) => {
+                        secret_scan_vuln.status()
+                    }
+                    VulnerabilityType::JavaVulnerability(java_vulnerability) => {
+                        java_vulnerability.status()
                     }
                 };
                 if let Some(status) = status {
@@ -363,148 +400,5 @@ impl Summarize for VulnerabilitySummary {
                     v.title()
                 );
             });
-    }
-}
-
-#[cfg(test)]
-pub mod tests {
-    use super::*;
-    use std::fs::File;
-    #[test]
-    fn test_deserialize() -> Result<(), Box<dyn std::error::Error>> {
-        let mut f = File::open("tests/data/sample-audit.json")?;
-        let report: Report = serde_json::from_reader(&mut f)?;
-        assert_eq!(report.artifact_name, "spectacles:latest");
-
-        let debian_findings = match &report.results[0] {
-            AuditResult::DebianResult(debian_result) => debian_result,
-            _ => panic!("Unexpected result type as first result."),
-        };
-        assert_eq!(debian_findings.target, "spectacles:latest (debian 11.11)");
-
-        let first_vuln = &debian_findings.vulnerabilities[0];
-        assert_eq!(first_vuln.vulnerability_id, "CVE-2011-3374");
-
-        let finding_with_status = debian_findings
-            .vulnerabilities
-            .iter()
-            .filter(|v| v.vulnerability_id == "CVE-2016-2781")
-            .next()
-            .expect("This vulnerability should be found.");
-
-        assert!(matches!(
-            finding_with_status.status.as_ref().unwrap(),
-            VulnerabilityStatus::WillNotFix
-        ));
-        Ok(())
-    }
-
-    #[test]
-    fn test_summary() -> Result<(), Box<dyn std::error::Error>> {
-        let mut f = File::open("tests/data/sample-audit.json")?;
-        let report: Report = serde_json::from_reader(&mut f)?;
-
-        let summary = VulnerabilitySummary::from(&report);
-        assert_eq!(summary.low_severity, 76);
-        assert_eq!(summary.medium_severity, 27);
-        assert_eq!(summary.high_severity, 3);
-        assert_eq!(summary.critical_severity, 2);
-
-        Ok(())
-    }
-    #[test]
-    fn test_summary_builder() -> Result<(), Box<dyn std::error::Error>> {
-        let mut f = File::open("tests/data/sample-audit.json")?;
-        let report: Report = serde_json::from_reader(&mut f)?;
-
-        let summary = VulnerabilitySummaryBuilder::new()
-            .with_filter_on_status(&VulnerabilityStatus::WillNotFix)
-            .with_filter_on_status(&VulnerabilityStatus::NotAffected)
-            .with_filter_on_status(&VulnerabilityStatus::Fixed)
-            .build(&report);
-        assert_eq!(summary.low_severity, 75);
-        assert_eq!(summary.medium_severity, 19);
-        assert_eq!(summary.high_severity, 3);
-        assert_eq!(summary.critical_severity, 0);
-
-        Ok(())
-    }
-
-    #[test]
-    fn test_alpine_summary() -> Result<(), Box<dyn std::error::Error>> {
-        let mut f = File::open("tests/data/trivy-report-alpine.json")?;
-        let report: Report = serde_json::from_reader(&mut f)?;
-
-        let summary = VulnerabilitySummary::from(report);
-        assert_eq!(summary.low_severity, 4);
-        assert_eq!(summary.medium_severity, 28);
-        assert_eq!(summary.high_severity, 0);
-        assert_eq!(summary.critical_severity, 0);
-
-        Ok(())
-    }
-
-    #[test]
-    fn test_debian_vuln_deserialize() -> Result<(), Box<dyn std::error::Error>> {
-        let mut f = File::open("tests/data/debian-vuln.json")?;
-        let debian_vulnerability: SystemPackageVulnerability = serde_json::from_reader(&mut f)?;
-        assert_eq!(
-            debian_vulnerability.title(),
-            "It was found that apt-key in apt, all versions, do not correctly valid ..."
-        );
-
-        Ok(())
-    }
-
-    #[test]
-    fn test_debian_result_deserialize() -> Result<(), Box<dyn std::error::Error>> {
-        let mut f = File::open("tests/data/debian-result.json")?;
-        let result: DebianResult = serde_json::from_reader(&mut f)?;
-
-        assert_eq!(result.vulnerabilities[0].title(), "zlib: integer overflow and resultant heap-based buffer overflow in zipOpenNewFileInZip4_6");
-
-        Ok(())
-    }
-
-    #[test]
-    fn test_combined_result_deserialize() -> Result<(), Box<dyn std::error::Error>> {
-        let mut f = File::open("tests/data/debian-result.json")?;
-        let _result: AuditResult = serde_json::from_reader(&mut f)?;
-
-        Ok(())
-    }
-
-    #[test]
-    fn test_deserialize_python_vuln() -> Result<(), Box<dyn std::error::Error>> {
-        let mut f = File::open("tests/data/python-vuln.json")?;
-        let _result: PythonVulnerability = serde_json::from_reader(&mut f)?;
-
-        Ok(())
-    }
-
-    #[test]
-    fn test_deserialize_python_result() -> Result<(), Box<dyn std::error::Error>> {
-        let mut f = File::open("tests/data/python-result.json")?;
-        let _result: PythonPackageResult = serde_json::from_reader(&mut f)?;
-
-        Ok(())
-    }
-
-    #[test]
-    fn test_combined_with_python() -> Result<(), Box<dyn std::error::Error>> {
-        let mut f = File::open("tests/data/metascripts-audit.json")?;
-        let report: Report = serde_json::from_reader(&mut f)?;
-
-        let summary = VulnerabilitySummaryBuilder::new()
-            .with_filter_on_status(&VulnerabilityStatus::Unknown)
-            .with_filter_on_status(&VulnerabilityStatus::NotAffected)
-            .build(&report);
-
-        assert_eq!(summary.low_severity, 58);
-        assert_eq!(summary.medium_severity, 16);
-        assert_eq!(summary.high_severity, 1);
-        assert_eq!(summary.critical_severity, 1);
-
-        Ok(())
     }
 }
