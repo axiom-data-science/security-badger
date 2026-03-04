@@ -392,9 +392,6 @@ impl Summarize for VulnerabilitySummary {
                 false
             })
             .for_each(|v| {
-                if let Some(package) = v.package() {
-                    log::debug!("{}", package);
-                }
                 log::info!(
                     "({}) {{{}}} {} {}",
                     v.severity().unwrap_or(&Severity::Unknown).short(),
