@@ -1,0 +1,87 @@
+{
+  "SchemaVersion": 2,
+  "CreatedAt": "2026-03-04T11:47:24.496872246Z",
+  "ArtifactName": "weblicks:latest",
+  "ArtifactType": "container_image",
+  "Metadata": {
+    "ImageID": "sha256:646b3ecc66b1551dea65fd008d71917250e196892c63ee06e2b580bab3f922b9",
+    "DiffIDs": [
+      "sha256:750a0a20f19465a1a117eea4b63b4c710061e844b5549faf2c7d0f0f7c513e17"
+    ],
+    "RepoTags": [
+      "weblicks:latest"
+    ],
+    "ImageConfig": {
+      "architecture": "amd64",
+      "created": "2026-03-04T06:43:40.769083273-05:00",
+      "history": [
+        {
+          "created": "2026-03-04T11:43:40Z",
+          "created_by": "COPY /opt/weblicks/target/x86_64-unknown-linux-musl/release/weblicks /weblicks # buildkit",
+          "comment": "buildkit.dockerfile.v0"
+        },
+        {
+          "created": "2026-03-04T11:43:40Z",
+          "created_by": "ENV GEOIP_DB=/geoip.mmdb",
+          "comment": "buildkit.dockerfile.v0",
+          "empty_layer": true
+        },
+        {
+          "created": "2026-03-04T11:43:40Z",
+          "created_by": "LABEL org.opencontainers.image.authors=Luke Campbell \u003cluke@axds.co\u003e",
+          "comment": "buildkit.dockerfile.v0",
+          "empty_layer": true
+        },
+        {
+          "created": "2026-03-04T11:43:40Z",
+          "created_by": "LABEL org.opencontainers.image.url=https://git.axiom/axiom/weblicks/",
+          "comment": "buildkit.dockerfile.v0",
+          "empty_layer": true
+        },
+        {
+          "created": "2026-03-04T11:43:40Z",
+          "created_by": "LABEL org.opencontainers.image.source=https://git.axiom/axiom/weblicks/",
+          "comment": "buildkit.dockerfile.v0",
+          "empty_layer": true
+        },
+        {
+          "created": "2026-03-04T11:43:40Z",
+          "created_by": "LABEL org.opencontainers.image.licenses=MIT",
+          "comment": "buildkit.dockerfile.v0",
+          "empty_layer": true
+        },
+        {
+          "created": "2026-03-04T11:43:40Z",
+          "created_by": "ENTRYPOINT [\"/weblicks\"]",
+          "comment": "buildkit.dockerfile.v0",
+          "empty_layer": true
+        }
+      ],
+      "os": "linux",
+      "rootfs": {
+        "type": "layers",
+        "diff_ids": [
+          "sha256:750a0a20f19465a1a117eea4b63b4c710061e844b5549faf2c7d0f0f7c513e17"
+        ]
+      },
+      "config": {
+        "Entrypoint": [
+          "/weblicks"
+        ],
+        "Env": [
+          "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+          "GEOIP_DB=/geoip.mmdb"
+        ],
+        "Labels": {
+          "org.opencontainers.image.authors": "Luke Campbell \u003cluke@axds.co\u003e",
+          "org.opencontainers.image.created": "-03-04T11:47:24Z",
+          "org.opencontainers.image.licenses": "MIT",
+          "org.opencontainers.image.revision": "d0ed55d5fb4ec65ba0ef62a5142a66a86b7df714",
+          "org.opencontainers.image.source": "https://git.axiom/axiom/weblicks/",
+          "org.opencontainers.image.url": "https://git.axiom/axiom/weblicks/"
+        },
+        "WorkingDir": "/"
+      }
+    }
+  }
+}
