@@ -8,6 +8,8 @@ pub mod python;
 pub use python::{PythonPackageResult, PythonVulnerability};
 pub mod secret_scan;
 pub use secret_scan::{SecretScanResult, SecretScanVulnerability};
+pub mod rustbinary;
+pub use rustbinary::RustBinaryResult;
 
 use std::fmt::Display;
 
@@ -152,6 +154,11 @@ impl From<&Report> for Vec<VulnerabilityType> {
                     vulnerabilities.push(VulnerabilityType::SecretScanVulnerability(a))
                 })
             }
+            AuditResult::RustBinaryResult(rust_binary_result) => {
+                rust_binary_result.vulnerabilities.iter().cloned().for_each(|a| {
+                    vulnerabilities.push(VulnerabilityType::SystemPackageVulnerability(a))
+                })
+            }
         });
         vulnerabilities
     }
@@ -173,6 +180,9 @@ pub enum AuditResult {
 
     #[serde(rename = "jar")]
     JavaJarResult(JavaJarResult),
+
+    #[serde(rename = "rustbinary")]
+    RustBinaryResult(RustBinaryResult),
 }
 
 impl<'de> Deserialize<'de> for AuditResult {
@@ -212,6 +222,11 @@ impl<'de> Deserialize<'de> for AuditResult {
                 "jar" => {
                     return JavaJarResult::deserialize(value)
                         .map(AuditResult::JavaJarResult)
+                        .map_err(serde::de::Error::custom);
+                }
+                "rustbinary" => {
+                    return RustBinaryResult::deserialize(value)
+                        .map(AuditResult::RustBinaryResult)
                         .map_err(serde::de::Error::custom);
                 }
                 _ => {}

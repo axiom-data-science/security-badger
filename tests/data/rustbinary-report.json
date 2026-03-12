@@ -1,0 +1,117 @@
+{
+      "Target": "usr/local/bin/uv",
+      "Class": "lang-pkgs",
+      "Type": "rustbinary",
+      "Vulnerabilities": [
+        {
+          "VulnerabilityID": "CVE-2026-25537",
+          "PkgID": "jsonwebtoken@9.3.1",
+          "PkgName": "jsonwebtoken",
+          "PkgIdentifier": {
+            "PURL": "pkg:cargo/jsonwebtoken@9.3.1",
+            "UID": "fa6e467f067b83c4"
+          },
+          "InstalledVersion": "9.3.1",
+          "FixedVersion": "10.3.0",
+          "Status": "fixed",
+          "Layer": {
+            "DiffID": "sha256:f12716e46b0dce57ab0e2a59fefe894ce87ae278e45c027f272c232f19f035b3"
+          },
+          "SeveritySource": "ghsa",
+          "PrimaryURL": "https://avd.aquasec.com/nvd/cve-2026-25537",
+          "DataSource": {
+            "ID": "ghsa",
+            "Name": "GitHub Security Advisory Rust",
+            "URL": "https://github.com/advisories?query=type%3Areviewed+ecosystem%3Arust"
+          },
+          "Title": "jsonwebtoken: jsonwebtoken has Type Confusion that leads to potential authorization bypass",
+          "Description": "jsonwebtoken is a JWT lib in rust. Prior to version 10.3.0, there is a Type Confusion vulnerability in jsonwebtoken, specifically, in its claim validation logic. When a standard claim (such as nbf or exp) is provided with an incorrect JSON type (Like a String instead of a Number), the library’s internal parsing mechanism marks the claim as “FailedToParse”. Crucially, the validation logic treats this “FailedToParse” state identically to “NotPresent”. This means that if a check is enabled (like: validate_nbf = true), but the claim is not explicitly marked as required in required_spec_claims, the library will skip the validation check entirely for the malformed claim, treating it as if it were not there. This allows attackers to bypass critical time-based security restrictions (like “Not Before” checks) and commit potential authentication and authorization bypasses. This issue has been patched in version 10.3.0.",
+          "Severity": "MEDIUM",
+          "CweIDs": [
+            "CWE-843"
+          ],
+          "VendorSeverity": {
+            "ghsa": 2,
+            "nvd": 3,
+            "redhat": 2
+          },
+          "CVSS": {
+            "ghsa": {
+              "V40Vector": "CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:N/VI:L/VA:N/SC:N/SI:N/SA:N/E:P",
+              "V40Score": 5.5
+            },
+            "nvd": {
+              "V3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:H/A:N",
+              "V3Score": 7.5
+            },
+            "redhat": {
+              "V3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:H/A:N",
+              "V3Score": 7.5
+            }
+          },
+          "References": [
+            "https://access.redhat.com/security/cve/CVE-2026-25537",
+            "https://github.com/Keats/jsonwebtoken",
+            "https://github.com/Keats/jsonwebtoken/commit/abbc3076742c4161347bc6b8bf4aa5eb86e1dc01",
+            "https://github.com/Keats/jsonwebtoken/security/advisories/GHSA-h395-gr6q-cpjc",
+            "https://nvd.nist.gov/vuln/detail/CVE-2026-25537",
+            "https://www.cve.org/CVERecord?id=CVE-2026-25537"
+          ],
+          "PublishedDate": "2026-02-04T22:15:59.807Z",
+          "LastModifiedDate": "2026-02-11T19:13:47.607Z"
+        },
+        {
+          "VulnerabilityID": "CVE-2026-31812",
+          "PkgID": "quinn-proto@0.11.12",
+          "PkgName": "quinn-proto",
+          "PkgIdentifier": {
+            "PURL": "pkg:cargo/quinn-proto@0.11.12",
+            "UID": "17f6735e64b5ef1f"
+          },
+          "InstalledVersion": "0.11.12",
+          "FixedVersion": "0.11.14",
+          "Status": "fixed",
+          "Layer": {
+            "DiffID": "sha256:f12716e46b0dce57ab0e2a59fefe894ce87ae278e45c027f272c232f19f035b3"
+          },
+          "SeveritySource": "ghsa",
+          "PrimaryURL": "https://avd.aquasec.com/nvd/cve-2026-31812",
+          "DataSource": {
+            "ID": "ghsa",
+            "Name": "GitHub Security Advisory Rust",
+            "URL": "https://github.com/advisories?query=type%3Areviewed+ecosystem%3Arust"
+          },
+          "Title": "quinn-proto: quinn-proto: Denial of Service via crafted QUIC Initial packet",
+          "Description": "Quinn is a pure-Rust, async-compatible implementation of the IETF QUIC transport protocol. Prior to 0.11.14, a remote, unauthenticated attacker can trigger a denial of service in applications using vulnerable quinn versions by sending a crafted QUIC Initial packet containing malformed quic_transport_parameters. In quinn-proto parsing logic, attacker-controlled varints are decoded with unwrap(), so truncated encodings cause Err(UnexpectedEnd) and panic. This is reachable over the network with a single packet and no prior trust or authentication. This vulnerability is fixed in 0.11.14.",
+          "Severity": "HIGH",
+          "CweIDs": [
+            "CWE-248"
+          ],
+          "VendorSeverity": {
+            "ghsa": 3,
+            "redhat": 3
+          },
+          "CVSS": {
+            "ghsa": {
+              "V40Vector": "CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:N/VI:N/VA:H/SC:N/SI:N/SA:N",
+              "V40Score": 8.7
+            },
+            "redhat": {
+              "V3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:L",
+              "V3Score": 5.3
+            }
+          },
+          "References": [
+            "https://access.redhat.com/security/cve/CVE-2026-31812",
+            "https://github.com/quinn-rs/quinn",
+            "https://github.com/quinn-rs/quinn/pull/2559",
+            "https://github.com/quinn-rs/quinn/security/advisories/GHSA-6xvm-j4wr-6v98",
+            "https://nvd.nist.gov/vuln/detail/CVE-2026-31812",
+            "https://rustsec.org/advisories/RUSTSEC-2026-0037.html",
+            "https://www.cve.org/CVERecord?id=CVE-2026-31812"
+          ],
+          "PublishedDate": "2026-03-10T22:16:18.84Z",
+          "LastModifiedDate": "2026-03-11T13:52:47.683Z"
+        }
+      ]
+    }

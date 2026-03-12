@@ -174,6 +174,14 @@ fn test_geoserver() -> Result<(), Box<dyn std::error::Error>> {
     Ok(())
 }
 
+#[test]
+fn test_deserialize_rustbinary_result() -> Result<(), Box<dyn std::error::Error>> {
+    let contents = std::fs::read_to_string("tests/data/rustbinary-report.json")?;
+    let result: AuditResult = serde_json::from_str(&contents)?;
+    assert!(matches!(result, AuditResult::RustBinaryResult(_)));
+    Ok(())
+}
+
 
 #[test]
 fn test_empty_results() -> Result<(), Box<dyn std::error::Error>> {
