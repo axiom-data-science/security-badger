@@ -10,6 +10,8 @@ pub mod secret_scan;
 pub use secret_scan::{SecretScanResult, SecretScanVulnerability};
 pub mod rustbinary;
 pub use rustbinary::RustBinaryResult;
+pub mod gobinary;
+pub use gobinary::GoBinaryResult;
 
 use std::fmt::Display;
 
@@ -159,6 +161,11 @@ impl From<&Report> for Vec<VulnerabilityType> {
                     vulnerabilities.push(VulnerabilityType::SystemPackageVulnerability(a))
                 })
             }
+            AuditResult::GoBinaryResult(go_binary_result) => {
+                go_binary_result.vulnerabilities.iter().cloned().for_each(|a| {
+                    vulnerabilities.push(VulnerabilityType::SystemPackageVulnerability(a))
+                })
+            }
         });
         vulnerabilities
     }
@@ -183,6 +190,9 @@ pub enum AuditResult {
 
     #[serde(rename = "rustbinary")]
     RustBinaryResult(RustBinaryResult),
+
+    #[serde(rename = "gobinary")]
+    GoBinaryResult(GoBinaryResult),
 }
 
 impl<'de> Deserialize<'de> for AuditResult {
@@ -227,6 +237,11 @@ impl<'de> Deserialize<'de> for AuditResult {
                 "rustbinary" => {
                     return RustBinaryResult::deserialize(value)
                         .map(AuditResult::RustBinaryResult)
+                        .map_err(serde::de::Error::custom);
+                }
+                "gobinary" => {
+                    return GoBinaryResult::deserialize(value)
+                        .map(AuditResult::GoBinaryResult)
                         .map_err(serde::de::Error::custom);
                 }
                 _ => {}
