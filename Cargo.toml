@@ -10,7 +10,7 @@ anyhow = "1.0.102"
 badge-maker = "0.3.1"
 chrono = { version = "0.4.40", features = ["serde"] }
 clap = { version = "4.5.36", features = ["derive", "cargo"] }
-convert_case = "0.8.0"
+convert_case = "0.11.0"
 cvss = { version = "2.0.0", features = ["serde"] }
 enum_dispatch = "0.3.13"
 log = { version = "0.4.27", features = ["kv", "kv_std"] }
@@ -18,8 +18,8 @@ serde = { version = "1.0.219", features = ["derive"] }
 serde_json = "1.0.140"
 serde_path_to_error = "0.1.20"
 simple_logger = "5.0.0"
-strum = "0.27.1"
-strum_macros = "0.27.1"
+strum = "0.28.0"
+strum_macros = "0.28.0"
 thiserror = "2.0.12"
 
 [dev-dependencies]
