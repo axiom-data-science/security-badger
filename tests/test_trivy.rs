@@ -1,8 +1,8 @@
 use flate2::read::GzDecoder;
 use security_badger::trivy::{
-    AuditResult, DebianResult, PythonPackageResult, PythonVulnerability, Report,
-    SystemPackageVulnerability, VulnerabilitySummary, VulnerabilitySummaryBuilder,
-    VulnerabilityStatus, VulnQuery,
+    AuditResult, DebianResult, PythonPackageResult, PythonVulnerability, RedhatResult, Report,
+    SystemPackageVulnerability, VulnQuery, VulnerabilityStatus, VulnerabilitySummary,
+    VulnerabilitySummaryBuilder,
 };
 
 use std::fs::File;
@@ -99,8 +99,22 @@ fn test_debian_result_deserialize() -> Result<(), Box<dyn std::error::Error>> {
     let mut f = File::open("tests/data/debian-result.json")?;
     let result: DebianResult = serde_json::from_reader(&mut f)?;
 
-    assert_eq!(result.vulnerabilities[0].title(), "zlib: integer overflow and resultant heap-based buffer overflow in zipOpenNewFileInZip4_6");
+    assert_eq!(
+        result.vulnerabilities[0].title(),
+        "zlib: integer overflow and resultant heap-based buffer overflow in zipOpenNewFileInZip4_6"
+    );
 
+    Ok(())
+}
+
+#[test]
+fn test_redhat_result_deserialize() -> Result<(), Box<dyn std::error::Error>> {
+    let data = std::fs::read_to_string("tests/data/redhat-audit.json")?;
+    let result: RedhatResult = serde_json::from_str(&data)?;
+    assert_eq!(
+        result.vulnerabilities[0].title(),
+        "alsa-lib: alsa-lib Topology Decoder Heap-based Buffer Overflow"
+    );
     Ok(())
 }
 
@@ -189,7 +203,6 @@ fn test_deserialize_gobinary_result() -> Result<(), Box<dyn std::error::Error>> 
     assert!(matches!(result, AuditResult::GoBinaryResult(_)));
     Ok(())
 }
-
 
 #[test]
 fn test_empty_results() -> Result<(), Box<dyn std::error::Error>> {

@@ -12,6 +12,9 @@ pub enum Error {
     #[error("Json: Failed to parse the file as valid JSON: {0}")]
     Json(serde_json::Error),
 
+    #[error("Json: Failed to parse the file as valid JSON: {0}")]
+    PathError(serde_path_to_error::Error<serde_json::Error>),
+
     #[error("NotAStatus: The value is not a valid VulnerabilityStatus")]
     NotAStatus,
 

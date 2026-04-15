@@ -80,7 +80,10 @@ pub enum Reporting {
 fn handle_trivy(args: &Args) -> Result<Box<dyn Badge>, Error> {
     let report: Report = {
         let rdr = args.audit_reader()?;
-        serde_json::from_reader(rdr).map_err(Error::Json)?
+        let mut deserializer = serde_json::Deserializer::from_reader(rdr);
+        serde_path_to_error::deserialize::<_, Report>(&mut deserializer)
+            .map_err(Error::PathError)?
+        //serde_json::from_reader(rdr).map_err(Error::Json)?
     };
     let mut builder = VulnerabilitySummaryBuilder::new();
     for filter_status in args.trivy_filter.iter() {
@@ -109,14 +112,27 @@ fn handle_cargo_audit(args: &Args) -> Result<Box<dyn Badge>, Error> {
 }
 
 /// Main entry point
-fn main() -> Result<(), Error> {
+fn main() -> anyhow::Result<()> {
     SimpleLogger::new()
         .init()
         .expect("Failed to initialize logging.");
     // Parse arguments
     let args = Args::parse();
     let summary = match handle_trivy(&args) {
-        Err(Error::Json(_)) => handle_cargo_audit(&args),
+        Err(Error::PathError(e)) => match handle_cargo_audit(&args) {
+            Ok(summary) => Ok(summary),
+            Err(_) => {
+                let path = e.path().to_string();
+                let inner = e.into_inner();
+                anyhow::bail!(
+                    "JSON deserialize failed at path '{}': {} (line {}, column {})",
+                    path,
+                    inner,
+                    inner.line(),
+                    inner.column()
+                )
+            }
+        },
         Err(e) => Err(e),
         Ok(v) => Ok(v),
     }?;

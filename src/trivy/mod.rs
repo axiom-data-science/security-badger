@@ -6,6 +6,8 @@ pub mod java;
 pub use java::{JavaJarResult, JavaVulnerability};
 pub mod python;
 pub use python::{PythonPackageResult, PythonVulnerability};
+pub mod redhat;
+pub use redhat::RedhatResult;
 pub mod secret_scan;
 pub use secret_scan::{SecretScanResult, SecretScanVulnerability};
 pub mod rustbinary;
@@ -115,9 +117,6 @@ impl VulnQuery for SystemPackageVulnerability {
     }
 }
 
-
-
-
 #[derive(Clone, Debug)]
 #[enum_dispatch(VulnQuery)]
 pub enum VulnerabilityType {
@@ -141,6 +140,11 @@ impl From<&Report> for Vec<VulnerabilityType> {
                     vulnerabilities.push(VulnerabilityType::SystemPackageVulnerability(a))
                 })
             }
+            AuditResult::RedhatResult(redhat_result) => {
+                redhat_result.vulnerabilities.iter().cloned().for_each(|a| {
+                    vulnerabilities.push(VulnerabilityType::SystemPackageVulnerability(a))
+                })
+            }
             AuditResult::PythonPackageResult(python_package_result) => python_package_result
                 .vulnerabilities
                 .iter()
@@ -156,16 +160,20 @@ impl From<&Report> for Vec<VulnerabilityType> {
                     vulnerabilities.push(VulnerabilityType::SecretScanVulnerability(a))
                 })
             }
-            AuditResult::RustBinaryResult(rust_binary_result) => {
-                rust_binary_result.vulnerabilities.iter().cloned().for_each(|a| {
+            AuditResult::RustBinaryResult(rust_binary_result) => rust_binary_result
+                .vulnerabilities
+                .iter()
+                .cloned()
+                .for_each(|a| {
                     vulnerabilities.push(VulnerabilityType::SystemPackageVulnerability(a))
-                })
-            }
-            AuditResult::GoBinaryResult(go_binary_result) => {
-                go_binary_result.vulnerabilities.iter().cloned().for_each(|a| {
+                }),
+            AuditResult::GoBinaryResult(go_binary_result) => go_binary_result
+                .vulnerabilities
+                .iter()
+                .cloned()
+                .for_each(|a| {
                     vulnerabilities.push(VulnerabilityType::SystemPackageVulnerability(a))
-                })
-            }
+                }),
         });
         vulnerabilities
     }
@@ -175,6 +183,9 @@ impl From<&Report> for Vec<VulnerabilityType> {
 pub enum AuditResult {
     #[serde(rename = "debian")]
     DebianResult(DebianResult),
+
+    #[serde(rename = "redhat")]
+    RedhatResult(RedhatResult),
 
     #[serde(rename = "alpine")]
     AlpineResult(AlpineResult),
@@ -222,6 +233,11 @@ impl<'de> Deserialize<'de> for AuditResult {
                 "alpine" => {
                     return AlpineResult::deserialize(value)
                         .map(AuditResult::AlpineResult)
+                        .map_err(serde::de::Error::custom);
+                }
+                "redhat" => {
+                    return RedhatResult::deserialize(value)
+                        .map(AuditResult::RedhatResult)
                         .map_err(serde::de::Error::custom);
                 }
                 "python-pkg" => {
