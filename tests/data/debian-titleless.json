@@ -1,0 +1,30 @@
+{
+        "VulnerabilityID": "CVE-2026-7168",
+        "PkgID": "libcurl3-gnutls@7.88.1-10+deb12u14",
+        "PkgName": "libcurl3-gnutls",
+        "PkgIdentifier": {
+            "PURL": "pkg:deb/debian/libcurl3-gnutls@7.88.1-10%2Bdeb12u14?arch=amd64&distro=debian-12.13",
+            "UID": "bf21c02bf546dc89"
+        },
+        "InstalledVersion": "7.88.1-10+deb12u14",
+        "Status": "affected",
+        "Layer": {
+            "DiffID": "sha256:8132461f94ae9748e462cee9bdf74b4061f7b33cf1c919aaa6fca0cf6e2b0ddc"
+        },
+        "PrimaryURL": "https://avd.aquasec.com/nvd/cve-2026-7168",
+        "DataSource": {
+            "ID": "debian",
+            "Name": "Debian Security Tracker",
+            "URL": "https://salsa.debian.org/security-tracker-team/security-tracker"
+        },
+        "Fingerprint": "sha256:03104ff9ffb4622366821a92bad477d43f25b1820070b569220a229b588e1f6c",
+        "Description": "cross-proxy Digest auth state leak",
+        "Severity": "MEDIUM",
+        "VendorSeverity": {
+            "ubuntu": 2
+        },
+        "References": [
+            "https://ubuntu.com/security/notices/USN-8227-1",
+            "https://www.cve.org/CVERecord?id=CVE-2026-7168"
+        ]
+    }

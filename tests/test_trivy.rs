@@ -4,8 +4,9 @@ use security_badger::trivy::{
     SystemPackageVulnerability, VulnQuery, VulnerabilityStatus, VulnerabilitySummary,
     VulnerabilitySummaryBuilder,
 };
+use serde_json::Value;
 
-use std::fs::File;
+use std::{alloc::System, fs::File};
 
 #[test]
 fn test_deserialize() -> Result<(), Box<dyn std::error::Error>> {
@@ -210,5 +211,13 @@ fn test_empty_results() -> Result<(), Box<dyn std::error::Error>> {
     let report: Report = serde_json::from_str(&f)?;
     let summary = VulnerabilitySummaryBuilder::new().build(&report);
     println!("{:?}", summary);
+    Ok(())
+}
+
+
+#[test]
+fn test_ugh() -> Result<(), Box<dyn std::error::Error>> {
+    let f = std::fs::read_to_string("tests/data/debian-titleless.json")?;
+    let _package: SystemPackageVulnerability = serde_json::from_str(&f)?;
     Ok(())
 }

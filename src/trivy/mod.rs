@@ -74,7 +74,7 @@ pub struct SystemPackageVulnerability {
     pub vulnerability_id: String,
     #[serde(rename = "PkgID")]
     pub pkg_id: String,
-    pub title: String,
+    pub title: Option<String>,
     pub description: Option<String>,
     pub severity: Option<Severity>,
     pub installed_version: Option<String>,
@@ -109,7 +109,7 @@ impl VulnQuery for SystemPackageVulnerability {
     }
 
     fn title(&self) -> &str {
-        &self.title
+        self.title.as_ref().unwrap_or(&self.pkg_id)
     }
 
     fn package(&self) -> Option<&str> {
